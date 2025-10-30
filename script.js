@@ -4,12 +4,13 @@ function setup() {
   makePageForEpisodes(allEpisodes);
 }
 
-function createEpisodeCard({ name, season, number, image, summary }) {
+function createEpisodeCard({ name, season, number, url, image, summary }) {
   const card = document.getElementById("episodeCard").content.cloneNode(true);
   card.getElementById("episodeName").textContent = name;
   card.getElementById("seasonEpisode").textContent = `S${String(
     season
   ).padStart(2, 0)}E${String(number).padStart(2, 0)}`;
+  card.getElementById("episodeLink").href = url;
   card.getElementById("episodeImage").src = image.medium;
   card.getElementById("episodeSummary").innerHTML = summary;
   return card;
