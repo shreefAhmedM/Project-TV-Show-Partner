@@ -9,12 +9,21 @@
   </head>
 
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <template id="episodeCard">
+        <section>
+          <h3 id="episodeName">Name of the episode</h3>
+          <p id="seasonEpisode">The season number & The episode number</p>
+          <img id="episodeImage" />
+          <p id="episodeSummary"></p>
+        </section>
+      </template>
+    </div>
 
     <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
     <script src="episodes.js"></script>
 
     <!-- Loads YOUR javascript code -->
-    <script src="script.js"></script>
+    <script src="script.js" defer></script>
   </body>
 </html>
