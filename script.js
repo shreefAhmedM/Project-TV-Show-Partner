@@ -8,6 +8,13 @@ function setup() {
     fetchAllEpisodes() {
       state.episodes = getAllEpisodes();
     },
+    updateSearchTerm() {
+      const searchTermInput = document.getElementById("search-input");
+      state.searchTerm = searchTermInput.value;
+      console.log(state.searchTerm);
+      document.getElementById("show").innerHTML = "";
+      this.render();
+    },
     createEpisodeCard({ name, season, number, url, image, summary }) {
       const card = document
         .getElementById("episodeCard")
@@ -22,14 +29,26 @@ function setup() {
       return card;
     },
     render() {
-      this.fetchAllEpisodes();
-      const root = document.getElementById("root");
-      const episodeCards = state.episodes.map((episode) =>
+      const show = document.getElementById("show");
+      const filteredEpisodes = state.episodes.filter(({ name }) =>
+        name.includes(state.searchTerm)
+      );
+      let episodeCards = filteredEpisodes.map((episode) =>
         this.createEpisodeCard(episode)
       );
-      root.append(...episodeCards);
+      show.append(...episodeCards);
     },
   };
 }
 
-window.onload = setup().render();
+const gameOfThrones = setup();
+
+window.onload = () => {
+  gameOfThrones.fetchAllEpisodes();
+  gameOfThrones.render();
+
+  const searchTermInput = document.getElementById("search-input");
+  searchTermInput.addEventListener("keyup", () => {
+    gameOfThrones.updateSearchTerm();
+  });
+};
