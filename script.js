@@ -11,7 +11,6 @@ function setup() {
     updateSearchTerm() {
       const searchTermInput = document.getElementById("search-input");
       state.searchTerm = searchTermInput.value;
-      console.log(state.searchTerm);
       document.getElementById("show").innerHTML = "";
       this.render();
     },
@@ -31,9 +30,9 @@ function setup() {
     render() {
       const show = document.getElementById("show");
       const filteredEpisodes = state.episodes.filter(({ name }) =>
-        name.includes(state.searchTerm)
+        name.toLowerCase().includes(state.searchTerm.toLowerCase())
       );
-      let episodeCards = filteredEpisodes.map((episode) =>
+      const episodeCards = filteredEpisodes.map((episode) =>
         this.createEpisodeCard(episode)
       );
       show.append(...episodeCards);
