@@ -7,25 +7,20 @@
     <link href="style.css" rel="stylesheet" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   </head>
-
   <body>
     <div id="root">
       <template id="episodeCard">
-        <section>
-          <h3 id="episodeName">Name of the episode</h3>
-          <p id="seasonEpisode">The season number & The episode number</p>
-          <a id="episodeLink">
-            <img id="episodeImage" />
-          </a>
-          <p id="episodeSummary"></p>
-        </section>
+        <h3 id="episodeName">Name of the episode</h3>
+        <p id="seasonEpisode">The season number & The episode number</p>
+        <a id="episodeLink">
+          <img id="episodeImage" />
+        </a>
+        <p id="episodeSummary"></p>
       </template>
     </div>
-    <footer>Data from: <a href="https://www.tvmaze.com/">TVMaze.com</a></footer>
-
+    <!-- <a href="https://www.tvmaze.com/">TVMaze.com</a> -->
     <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
     <script src="episodes.js"></script>
-
     <!-- Loads YOUR javascript code -->
     <script src="script.js" defer></script>
   </body>
