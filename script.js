@@ -54,7 +54,7 @@ function renderEpisodes(episodes) {
   }
   episodes.forEach(({ name, season, number, image, summary }) => {
     container.innerHTML += `
-      <section class="film-card">
+      <section class="episodeCard">
         <h3 class="title">${name} - S${String(season).padStart(
       2,
       "0"
@@ -86,3 +86,4 @@ function updateMatchCount(filtered, total) {
 }
 
 window.onload = setup;
+film - card;
