@@ -1,69 +1,52 @@
-let allEpisodes = [];
-let searchTerm = "";
+let allEpisodesList = [];
+let currentSearchTerm = "";
 
 function setup() {
-  allEpisodes = getAllEpisodes();
-
-  renderEpisodes(allEpisodes);
-  populateEpisodeSelector(allEpisodes);
+  allEpisodesList = getAllEpisodes();
+  makePageForEpisodes(allEpisodesList);
+  populateEpisodeSelector(allEpisodesList);
+  updateMatchCount(allEpisodesList.length, allEpisodesList.length);
 
   document
     .getElementById("search-input")
-    .addEventListener("input", handleSearch);
+    .addEventListener("input", onSearchInput);
   document
     .getElementById("episode-option-selector")
-    .addEventListener("change", handleSelect);
+    .addEventListener("change", onSelectorChange);
 }
 
-function handleSearch(e) {
-  searchTerm = e.target.value.toLowerCase();
-  const filtered = filterEpisodes(allEpisodes, searchTerm);
-  renderEpisodes(filtered);
-  updateMatchCount(filtered.length, allEpisodes.length);
+function onSearchInput(e) {
+  currentSearchTerm = e.target.value.toLowerCase();
+  document.getElementById("episode-option-selector").selectedIndex = 0;
+  const filteredList = filterEpisodes(allEpisodesList, currentSearchTerm);
+  makePageForEpisodes(filteredList);
+  updateMatchCount(filteredList.length, allEpisodesList.length);
 }
 
-function handleSelect(e) {
+function onSelectorChange(e) {
   const val = e.target.value;
+  document.getElementById("search-input").value = "";
+  currentSearchTerm = "";
   if (!val) {
-    renderEpisodes(allEpisodes);
-    updateMatchCount(allEpisodes.length, allEpisodes.length);
+    makePageForEpisodes(allEpisodesList);
+    updateMatchCount(allEpisodesList.length, allEpisodesList.length);
     return;
   }
   const [season, number] = val.split("-");
-  const found = allEpisodes.find(
-    (ep) => ep.season === +season && ep.number === +number
+  const found = allEpisodesList.find(
+    (ep) => ep.season === Number(season) && ep.number === Number(number)
   );
-  renderEpisodes(found ? [found] : []);
-  updateMatchCount(found ? 1 : 0, allEpisodes.length);
+  makePageForEpisodes(found ? [found] : []);
+  updateMatchCount(found ? 1 : 0, allEpisodesList.length);
 }
 
 function filterEpisodes(list, term) {
+  if (!term) return list;
   return list.filter(
     (ep) =>
       ep.name.toLowerCase().includes(term) ||
       ep.summary.toLowerCase().includes(term)
   );
-}
-
-function renderEpisodes(episodes) {
-  const container = document.getElementById("episodes-container");
-  container.innerHTML = "";
-  if (!episodes.length) {
-    container.textContent = "No episodes found.";
-    return;
-  }
-  episodes.forEach(({ name, season, number, image, summary }) => {
-    container.innerHTML += `
-      <section class="episodeCard">
-        <h3 class="title">${name} - S${String(season).padStart(
-      2,
-      "0"
-    )}E${String(number).padStart(2, "0")}</h3>
-        <img class="img" src="${image.medium}" alt="${name} Image">
-        <p class="summary">${summary}</p>
-      </section>
-    `;
-  });
 }
 
 function populateEpisodeSelector(episodes) {
@@ -84,6 +67,41 @@ function updateMatchCount(filtered, total) {
     "NumsOfEpisodes"
   ).textContent = `${filtered}/${total}`;
 }
+function createEpisodeCard({ name, season, number, url, image, summary }) {
+  const card = document.createElement("div");
+  card.className = "episode-card";
+
+  const nameEl = document.createElement("h3");
+  nameEl.textContent = name;
+
+  const seasonEl = document.createElement("p");
+  seasonEl.textContent = `S${String(season).padStart(2, "0")}E${String(
+    number
+  ).padStart(2, "0")}`;
+
+  const linkEl = document.createElement("a");
+  linkEl.href = url;
+  linkEl.target = "_blank";
+
+  const imgEl = document.createElement("img");
+  imgEl.src = image.medium;
+  imgEl.alt = name;
+  linkEl.appendChild(imgEl);
+
+  const summaryEl = document.createElement("p");
+  summaryEl.innerHTML = summary;
+
+  card.append(nameEl, seasonEl, linkEl, summaryEl);
+
+  return card;
+}
+
+function makePageForEpisodes(episodeList) {
+  const root = document.getElementById("root");
+
+  root.innerHTML = "";
+  const episodeCards = episodeList.map((episode) => createEpisodeCard(episode));
+  root.append(...episodeCards);
+}
 
 window.onload = setup;
-film - card;
