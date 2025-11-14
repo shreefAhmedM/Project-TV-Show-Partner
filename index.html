@@ -1,32 +1,43 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
+<link rel="icon" href="/favicon.ico" type="image/x-icon" />
+<head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TV Show Project | TzeMingHo (TzeMingHo)</title>
     <link href="style.css" rel="stylesheet" />
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
   </head>
-
   <body>
-    <div id="root">
-      <template id="episodeCard">
-        <section>
-          <h3 id="episodeName">Name of the episode</h3>
-          <p id="seasonEpisode">The season number & The episode number</p>
-          <a id="episodeLink">
-            <img id="episodeImage" />
-          </a>
-          <p id="episodeSummary"></p>
-        </section>
-      </template>
-    </div>
-    <footer>Data from: <a href="https://www.tvmaze.com/">TVMaze.com</a></footer>
 
-    <!-- Loads a provided function called getAllEpisodes() which returns all episodes -->
+    <header>
+      <div id="episode-selector">
+        <select name="episode-selector" id="episode-option-selector"></select>
+      </div>
+
+      <div id="episode-search">
+        <input type="text" id="search-input" placeholder="Your search term" />
+      </div>
+
+      <div id="NumsOfEpisodes">73/73</div>
+    </div>
+    </header>
+
+ <div id="root">
+      <div id="episodes-container">
+        <h3> Name of the episode</h3>
+        <p id="seasonEpisode">The season number & The episode number</p>
+        <a id="episodeLink">
+          <img id="episodeImage" />
+        </a>
+        <p id="episodeSummary"></p>
+      </div>
+    </div>
+
+
+    <!-- Script to load provided function getAllEpisodes() -->
     <script src="episodes.js"></script>
 
-    <!-- Loads YOUR javascript code -->
-    <script src="script.js" defer></script>
+    <!-- Script to load your custom JavaScript functionality -->
+    <script src="script.js"></script>
+  </body>
   </body>
 </html>
