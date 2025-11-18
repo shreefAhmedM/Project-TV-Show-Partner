@@ -63,9 +63,8 @@ function populateEpisodeSelector(episodes) {
 }
 
 function updateMatchCount(filtered, total) {
-  document.getElementById(
-    "NumsOfEpisodes"
-  ).textContent = `${filtered}/${total}`;
+  document.getElementById("NumsOfEpisodes").textContent =
+    `${filtered}/${total}`;
 }
 function createEpisodeCard({ name, season, number, url, image, summary }) {
   const card = document.createElement("div");
