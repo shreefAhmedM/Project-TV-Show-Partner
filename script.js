@@ -1,5 +1,5 @@
-let allEpisodesList = [];
-let currentSearchTerm = "";
+var allEpisodesList = [];
+var currentSearchTerm = "";
 
 function setup() {
   allEpisodesList = getAllEpisodes();
@@ -18,13 +18,13 @@ function setup() {
 function onSearchInput(e) {
   currentSearchTerm = e.target.value.toLowerCase();
   document.getElementById("episode-option-selector").selectedIndex = 0;
-  const filteredList = filterEpisodes(allEpisodesList, currentSearchTerm);
+  var filteredList = filterEpisodes(allEpisodesList, currentSearchTerm);
   makePageForEpisodes(filteredList);
   updateMatchCount(filteredList.length, allEpisodesList.length);
 }
 
 function onSelectorChange(e) {
-  const val = e.target.value;
+  var val = e.target.value;
   document.getElementById("search-input").value = "";
   currentSearchTerm = "";
   if (!val) {
@@ -32,8 +32,8 @@ function onSelectorChange(e) {
     updateMatchCount(allEpisodesList.length, allEpisodesList.length);
     return;
   }
-  const [season, number] = val.split("-");
-  const found = allEpisodesList.find(
+  let [season, number] = val.split("-");
+  let found = allEpisodesList.find(
     (ep) => ep.season === Number(season) && ep.number === Number(number)
   );
   makePageForEpisodes(found ? [found] : []);
@@ -63,20 +63,19 @@ function populateEpisodeSelector(episodes) {
 }
 
 function updateMatchCount(filtered, total) {
-  document.getElementById("NumsOfEpisodes").textContent =
+  document.getElementById("NumbersOfEpisodes").textContent =
     `${filtered}/${total}`;
 }
+
 function createEpisodeCard({ name, season, number, url, image, summary }) {
   const card = document.createElement("div");
   card.className = "episode-card";
 
-  const nameEl = document.createElement("h3");
+  const nameEl = document.createElement("h2");
   nameEl.textContent = name;
 
-  const seasonEl = document.createElement("p");
-  seasonEl.textContent = `S${String(season).padStart(2, "0")}E${String(
-    number
-  ).padStart(2, "0")}`;
+  const seasonEl = document.createElement("h3");
+  seasonEl.textContent = `S${String(season).padStart(2, "0")}E${String(number).padStart(2, "0")}`;
 
   const linkEl = document.createElement("a");
   linkEl.href = url;
@@ -87,7 +86,7 @@ function createEpisodeCard({ name, season, number, url, image, summary }) {
   imgEl.alt = name;
   linkEl.appendChild(imgEl);
 
-  const summaryEl = document.createElement("p");
+  const summaryEl = document.createElement("div");
   summaryEl.innerHTML = summary;
 
   card.append(nameEl, seasonEl, linkEl, summaryEl);
