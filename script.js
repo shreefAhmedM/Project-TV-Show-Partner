@@ -1,8 +1,9 @@
 var allEpisodesList = [];
 var currentSearchTerm = "";
+var endPoint = "https://api.tvmaze.com/shows/82/episodes";
 
-function setup() {
-  allEpisodesList = getAllEpisodes();
+async function setup() {
+  allEpisodesList = await fetchingShow();
   makePageForEpisodes(allEpisodesList);
   populateSeasonSelector(allEpisodesList);
   updateMatchCount(allEpisodesList.length, allEpisodesList.length);
@@ -13,6 +14,16 @@ function setup() {
   document
     .getElementById("season-selector")
     .addEventListener("change", handleSeasonSelector);
+}
+
+async function fetchingShow() {
+  const response = await fetch(endPoint);
+  if (response.ok) {
+    const episodes = await response.json();
+    return episodes;
+  } else {
+    throw new Error(`Response status: ${response.status}`);
+  }
 }
 
 function handleSearchTermInput(e) {
