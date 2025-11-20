@@ -3,7 +3,7 @@ var currentSearchTerm = "";
 var endPoint = "https://api.tvmaze.com/shows/82/episodes";
 
 async function setup() {
-  allEpisodesList = await fetchingShow();
+  allEpisodesList = await fetchingEpisodes();
   makePageForEpisodes(allEpisodesList);
   populateSeasonSelector(allEpisodesList);
   updateMatchCount(allEpisodesList.length, allEpisodesList.length);
@@ -16,7 +16,7 @@ async function setup() {
     .addEventListener("change", handleSeasonSelector);
 }
 
-async function fetchingShow() {
+async function fetchingEpisodes() {
   const response = await fetch(endPoint);
   if (response.ok) {
     const episodes = await response.json();
