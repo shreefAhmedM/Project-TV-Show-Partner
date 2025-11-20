@@ -4,7 +4,7 @@ var currentSearchTerm = "";
 function setup() {
   allEpisodesList = getAllEpisodes();
   makePageForEpisodes(allEpisodesList);
-  populateEpisodeSelector(allEpisodesList);
+  populateSeasonSelector(allEpisodesList);
   updateMatchCount(allEpisodesList.length, allEpisodesList.length);
 
   document
@@ -12,7 +12,7 @@ function setup() {
     .addEventListener("input", handleSearchTermInput);
   document
     .getElementById("season-selector")
-    .addEventListener("change", onSelectorChange);
+    .addEventListener("change", handleSeasonSelector);
 }
 
 function handleSearchTermInput(e) {
@@ -23,21 +23,19 @@ function handleSearchTermInput(e) {
   makePageForEpisodes(filteredList);
 }
 
-function onSelectorChange(e) {
-  var val = e.target.value;
+function handleSeasonSelector(e) {
+  var seasonValue = e.target.value;
   document.getElementById("search-term-input").value = "";
   currentSearchTerm = "";
-  if (!val) {
+  if (!seasonValue) {
     makePageForEpisodes(allEpisodesList);
     return;
   }
-  let [season, number] = val.split("-");
-  let found = allEpisodesList.find(
-    (episode) =>
-      episode.season === Number(season) && episode.number === Number(number)
+  let found = allEpisodesList.filter(
+    (episode) => episode.season === Number(seasonValue)
   );
-  makePageForEpisodes(found ? [found] : []);
-  updateMatchCount(found ? 1 : 0, allEpisodesList.length);
+  makePageForEpisodes(found ? found : []);
+  updateMatchCount(found ? found.length : 0, allEpisodesList.length);
 }
 
 function filterEpisodes(episodesList, searchTerm) {
@@ -49,16 +47,17 @@ function filterEpisodes(episodesList, searchTerm) {
   );
 }
 
-function populateEpisodeSelector(episodes) {
+function populateSeasonSelector(episodes) {
   const selector = document.getElementById("season-selector");
-  selector.innerHTML = '<option value="">Show All Episodes</option>';
-  const availableSeasons = new Set(episodes.map((episodes) => episodes.season));
-  console.log(availableSeasons);
-  episodes.forEach(({ season }) => {
-    const option = document.createElement("option");
-    option.value = `${season}`;
-    option.textContent = `S${String(season).padStart(2, "0")}`;
-    selector.appendChild(option);
+  selector.innerHTML = '<option value="">Show All Seasons</option>';
+  const availableSeasonsArray = Array.from(
+    new Set(episodes.map((episodes) => episodes.season))
+  );
+  availableSeasonsArray.forEach((season) => {
+    const seasonOption = document.createElement("option");
+    seasonOption.value = `${season}`;
+    seasonOption.textContent = `S${String(season).padStart(2, "0")}`;
+    selector.appendChild(seasonOption);
   });
 }
 
