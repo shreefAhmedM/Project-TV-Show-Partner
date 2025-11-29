@@ -9,6 +9,7 @@ header {
   justify-content: flex-start;
   align-items: center;
   margin: 20px 0;
+  gap: 20px;
 }
 #search-term-input {
   border: none;

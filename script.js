@@ -1,20 +1,53 @@
-var allEpisodesList = [];
-var currentSearchTerm = "";
-var endPoint = "https://api.tvmaze.com/shows/82/episodes";
+let allEpisodesList = [];
+let currentSearchTerm = "";
+let showsList = [];
+let episodesCache = {}; // cache episodes per show
 
-async function setup() {
-  allEpisodesList = await fetchingEpisodes();
-  makePageForEpisodes(allEpisodesList);
-  populateSeasonSelector(allEpisodesList);
-  updateMatchCount(allEpisodesList.length, allEpisodesList.length);
-
-  document
-    .getElementById("search-term-input")
-    .addEventListener("input", handleSearchTermInput);
-  document
-    .getElementById("season-selector")
-    .addEventListener("change", handleSeasonSelector);
+// Fetch all shows from TVMaze and populate the show selector
+async function fetchShows() {
+  const response = await fetch("https://api.tvmaze.com/shows");
+  if (!response.ok) throw new Error("Failed to fetch shows");
+  const shows = await response.json();
+  shows.sort((a, b) =>
+    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+  );
+  showsList = shows;
+  populateShowSelector(showsList);
 }
+
+// Populate the show dropdown
+function populateShowSelector(shows) {
+  const selector = document.getElementById("show-selector");
+  selector.innerHTML = "";
+  shows.forEach((show) => {
+    const option = document.createElement("option");
+    option.value = show.id;
+    option.textContent = show.name;
+    selector.appendChild(option);
+  });
+}
+
+// When user selects a show, fetch episodes (or use cache)
+document
+  .getElementById("show-selector")
+  .addEventListener("change", async (e) => {
+    const showId = e.target.value;
+    if (!episodesCache[showId]) {
+      const res = await fetch(
+        `https://api.tvmaze.com/shows/${showId}/episodes`
+      );
+      if (!res.ok) return alert("Failed to fetch episodes");
+      const episodes = await res.json();
+      episodesCache[showId] = episodes;
+    }
+    allEpisodesList = episodesCache[showId];
+    // reset filters
+    document.getElementById("search-term-input").value = "";
+    document.getElementById("season-selector").selectedIndex = 0;
+    makePageForEpisodes(allEpisodesList);
+    populateSeasonSelector(allEpisodesList);
+    updateMatchCount(allEpisodesList.length, allEpisodesList.length);
+  });
 
 async function fetchingEpisodes() {
   const response = await fetch(endPoint);
@@ -117,4 +150,18 @@ function makePageForEpisodes(episodeList) {
   root.append(...episodeCards);
 }
 
-window.onload = setup;
+window.onload = async function setup() {
+  await fetchShows(); // load all shows into selector
+  // select first show automatically
+  document.getElementById("show-selector").selectedIndex = 0;
+  const firstShowId = document.getElementById("show-selector").value;
+  document.getElementById("show-selector").dispatchEvent(new Event("change"));
+
+  // keep search and season selector functionality
+  document
+    .getElementById("search-term-input")
+    .addEventListener("input", handleSearchTermInput);
+  document
+    .getElementById("season-selector")
+    .addEventListener("change", handleSeasonSelector);
+};
