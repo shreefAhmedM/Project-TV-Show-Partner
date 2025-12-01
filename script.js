@@ -150,7 +150,7 @@ function makePageForEpisodes(episodeList) {
   root.append(...episodeCards);
 }
 
-window.onload = async function setup() {
+async function setup() {
   await fetchShows(); // load all shows into selector
   // select first show automatically
   document.getElementById("show-selector").selectedIndex = 0;
@@ -164,4 +164,8 @@ window.onload = async function setup() {
   document
     .getElementById("season-selector")
     .addEventListener("change", handleSeasonSelector);
-};
+}
+
+const tvShow = setup();
+
+window.onload = async () => await tvShow;
