@@ -1,9 +1,8 @@
 let allEpisodesList = [];
 let currentSearchTerm = "";
 let showsList = [];
-let episodesCache = {}; // cache episodes per show
+let episodesCache = {};
 
-// Fetch all shows from TVMaze and populate the show selector
 async function fetchShows() {
   const response = await fetch("https://api.tvmaze.com/shows");
   if (!response.ok) throw new Error("Failed to fetch shows");
@@ -15,7 +14,6 @@ async function fetchShows() {
   populateShowSelector(showsList);
 }
 
-// Populate the show dropdown
 function populateShowSelector(shows) {
   const selector = document.getElementById("show-selector");
   selector.innerHTML = "";
@@ -27,7 +25,6 @@ function populateShowSelector(shows) {
   });
 }
 
-// When user selects a show, fetch episodes (or use cache)
 document
   .getElementById("show-selector")
   .addEventListener("change", async (e) => {
@@ -151,13 +148,10 @@ function makePageForEpisodes(episodeList) {
 }
 
 window.onload = async function setup() {
-  await fetchShows(); // load all shows into selector
-  // select first show automatically
+  await fetchShows();
   document.getElementById("show-selector").selectedIndex = 0;
   const firstShowId = document.getElementById("show-selector").value;
   document.getElementById("show-selector").dispatchEvent(new Event("change"));
-
-  // keep search and season selector functionality
   document
     .getElementById("search-term-input")
     .addEventListener("input", handleSearchTermInput);
