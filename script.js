@@ -19,10 +19,10 @@ async function fetchShows() {
 function populateShowSelector(shows) {
   const selector = document.getElementById("show-selector");
   selector.innerHTML = "";
-  shows.forEach((show) => {
+  shows.forEach(({ id, name }) => {
     const option = document.createElement("option");
-    option.value = show.id;
-    option.textContent = show.name;
+    option.value = id;
+    option.textContent = name;
     selector.appendChild(option);
   });
 }
