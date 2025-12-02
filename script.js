@@ -170,6 +170,12 @@ function createSelector(name) {
   return selectorContainer;
 }
 
+function addFunctionalities() {
+  createHeader();
+  const header = document.querySelector("header");
+  const showSelector = createSelector("show");
+}
+
 async function setup() {
   const state = {
     showsList: [],
@@ -177,9 +183,9 @@ async function setup() {
 
   await fetchShows(); // load all shows into selector
   // select first show automatically
-  document.getElementById("show-selector").selectedIndex = 0;
-  const firstShowId = document.getElementById("show-selector").value;
-  document.getElementById("show-selector").dispatchEvent(new Event("change"));
+  // document.getElementById("show-selector").selectedIndex = 0;
+  // const firstShowId = document.getElementById("show-selector").value;
+  // document.getElementById("show-selector").dispatchEvent(new Event("change"));
 
   // keep search and season selector functionality
   document
