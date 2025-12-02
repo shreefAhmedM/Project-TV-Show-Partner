@@ -150,7 +150,28 @@ function makePageForEpisodes(episodeList) {
   root.append(...episodeCards);
 }
 
+function createHeader() {
+  const headerElement = document.createElement("header");
+  const bodyElement = document.querySelector("body");
+  const rootElement = document.getElementById("root");
+  bodyElement.insertBefore(headerElement, rootElement);
+}
+
+function createShowSelector() {
+  const showSelectorContainer = document.createElement("div");
+  showSelectorContainer.id = "show-selector-container";
+  const labelElement = document.createElement("label");
+  labelElement.htmlFor = "show-selector";
+  const selectElement = document.createElement("select");
+  selectElement.id = "show-selector";
+  selectElement.name = "show-selector";
+}
+
 async function setup() {
+  const state = {
+    showsList: [],
+  };
+
   await fetchShows(); // load all shows into selector
   // select first show automatically
   document.getElementById("show-selector").selectedIndex = 0;
@@ -164,8 +185,16 @@ async function setup() {
   document
     .getElementById("season-selector")
     .addEventListener("change", handleSeasonSelector);
+
+  return {
+    fetchShowsFromEndPoint() {
+      state.showsList = fetchShows();
+    },
+  };
 }
 
 const tvShow = setup();
 
-window.onload = async () => await tvShow;
+window.onload = async () => {
+  await tvShow;
+};
