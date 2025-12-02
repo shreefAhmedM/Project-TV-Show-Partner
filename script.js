@@ -157,14 +157,17 @@ function createHeader() {
   bodyElement.insertBefore(headerElement, rootElement);
 }
 
-function createShowSelector() {
-  const showSelectorContainer = document.createElement("div");
-  showSelectorContainer.id = "show-selector-container";
+function createSelector(name) {
+  const selectorContainer = document.createElement("div");
+  selectorContainer.id = `${name}-container`;
   const labelElement = document.createElement("label");
-  labelElement.htmlFor = "show-selector";
+  labelElement.htmlFor = name;
   const selectElement = document.createElement("select");
-  selectElement.id = "show-selector";
-  selectElement.name = "show-selector";
+  selectElement.id = name;
+  selectElement.name = name;
+  selectorContainer.appendChild(labelElement);
+  selectorContainer.appendChild(selectElement);
+  return selectorContainer;
 }
 
 async function setup() {
