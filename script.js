@@ -174,6 +174,7 @@ function addFunctionalities() {
   createHeader();
   const header = document.querySelector("header");
   const showSelector = createSelector("show");
+  header.appendChild(showSelector);
 }
 
 async function setup() {
@@ -206,4 +207,5 @@ const tvShow = setup();
 
 window.onload = async () => {
   await tvShow;
+  addFunctionalities();
 };
