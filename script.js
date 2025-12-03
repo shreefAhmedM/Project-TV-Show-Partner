@@ -170,10 +170,20 @@ function createSelector(name) {
   return selectorContainer;
 }
 
+function createSearchField() {
+  const episodeSearchDiv = document.createElement("div");
+  episodeSearchDiv.id = "episode-search";
+  const searchInput = document.createElement("input");
+  searchInput.type = "text";
+  searchInput.id = "search-term-input";
+  searchInput.placeholder = "Search term";
+  return episodeSearchDiv;
+}
+
 function addFunctionalities() {
   createHeader();
   const header = document.querySelector("header");
-  const showSelector = createSelector("show");
+  const showSelector = createSelector("show-selector");
   header.appendChild(showSelector);
 }
 
@@ -181,12 +191,6 @@ async function setup() {
   const state = {
     showsList: [],
   };
-
-  await fetchShows(); // load all shows into selector
-  // select first show automatically
-  // document.getElementById("show-selector").selectedIndex = 0;
-  // const firstShowId = document.getElementById("show-selector").value;
-  // document.getElementById("show-selector").dispatchEvent(new Event("change"));
 
   // keep search and season selector functionality
   document
@@ -197,8 +201,8 @@ async function setup() {
     .addEventListener("change", handleSeasonSelector);
 
   return {
-    fetchShowsFromEndPoint() {
-      state.showsList = fetchShows();
+    async fetchShowsFromEndPoint() {
+      state.showsList = await fetchShows();
     },
   };
 }
@@ -206,6 +210,7 @@ async function setup() {
 const tvShow = setup();
 
 window.onload = async () => {
-  await tvShow;
+  await tvShow.fetchShowsFromEndPoint();
   addFunctionalities();
+  populateShowSelector();
 };
