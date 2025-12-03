@@ -127,15 +127,6 @@ function createEpisodeCard({ name, season, number, url, image, summary }) {
   return card;
 }
 
-function makePageForEpisodes(episodeList) {
-  const root = document.getElementById("root");
-
-  root.innerHTML = "";
-
-  const episodeCards = episodeList.map((episode) => createEpisodeCard(episode));
-  root.append(...episodeCards);
-}
-
 function createHeader() {
   const headerElement = document.createElement("header");
   const bodyElement = document.querySelector("body");
@@ -195,6 +186,9 @@ function addFunctionality() {
 function setup() {
   const state = {
     showsList: [],
+    episodesList: [],
+    currentSearchTerm: "",
+    currentShowId: 0,
   };
 
   return {
@@ -210,6 +204,16 @@ function setup() {
         option.textContent = name;
         selector.appendChild(option);
       });
+    },
+    makePageForEpisodes(episodeList) {
+      const root = document.getElementById("root");
+
+      root.innerHTML = "";
+
+      const episodeCards = episodeList.map((episode) =>
+        createEpisodeCard(episode)
+      );
+      root.append(...episodeCards);
     },
   };
 }
