@@ -36,16 +36,6 @@ async function fetchShows() {
 //     updateMatchCount(allEpisodesList.length, allEpisodesList.length);
 //   });
 
-async function fetchingEpisodes() {
-  const response = await fetch(endPoint);
-  if (response.ok) {
-    const episodes = await response.json();
-    return episodes;
-  } else {
-    throw new Error(`Response status: ${response.status}`);
-  }
-}
-
 function handleSearchTermInput(e) {
   currentSearchTerm = e.target.value.trim().toLowerCase();
   document.getElementById("season-selector").selectedIndex = 0;
@@ -173,16 +163,6 @@ function addHeaderElements() {
   header.appendChild(seasonSelector);
 }
 
-function addFunctionality() {
-  // keep search and season selector functionality
-  document
-    .getElementById("search-term-input")
-    .addEventListener("input", handleSearchTermInput);
-  document
-    .getElementById("season-selector")
-    .addEventListener("change", handleSeasonSelector);
-}
-
 function setup() {
   const state = {
     showsList: [],
@@ -205,6 +185,34 @@ function setup() {
         selector.appendChild(option);
       });
     },
+    async fetchingEpisodes(e) {
+      const selectedShowId = e.target.value;
+      if (state.currentShowId !== selectedShowId) {
+        const response = await fetch(
+          `https://api.tvmaze.com/shows/${selectedShowId}/episodes`
+        );
+        if (response.ok) {
+          const episodes = await response.json();
+          state.episodesList = episodes;
+          return;
+        } else {
+          throw new Error(`Response status: ${response.status}`);
+        }
+      }
+    },
+    addFunctionality() {
+      document
+        .getElementById("show-selector")
+        .addEventListener("change", this.fetchingEpisodes);
+      document
+        .getElementById("search-term-input")
+        .addEventListener("input", handleSearchTermInput);
+      document
+        .getElementById("season-selector")
+        .addEventListener("change", handleSeasonSelector);
+    },
+
+    handleShowSelector() {},
     makePageForEpisodes(episodeList) {
       const root = document.getElementById("root");
 
