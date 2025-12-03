@@ -80,7 +80,6 @@ function filterEpisodes(episodesList, searchTerm) {
 
 function populateSeasonSelector(episodes) {
   const selector = document.getElementById("season-selector");
-  selector.innerHTML = '<option value="">Show All Seasons</option>';
   const availableSeasonsArray = Array.from(
     new Set(episodes.map((episodes) => episodes.season))
   );
@@ -152,6 +151,13 @@ function createSelector(name) {
   const selectElement = document.createElement("select");
   selectElement.id = name;
   selectElement.name = name;
+
+  const defaultOption = document.createElement("option");
+  defaultOption.value = "";
+  const items = name.split("-")[0];
+  defaultOption.textContent = `All ${items}s`;
+  selectElement.appendChild(defaultOption);
+
   selectorContainer.appendChild(labelElement);
   selectorContainer.appendChild(selectElement);
   return selectorContainer;
@@ -171,8 +177,9 @@ function addHeaderElements() {
   createHeader();
   const header = document.querySelector("header");
   const showSelector = createSelector("show-selector");
-
+  const seasonSelector = createSelector("season-selector");
   header.appendChild(showSelector);
+  header.appendChild(seasonSelector);
 }
 
 function addFunctionality() {
@@ -197,7 +204,6 @@ function setup() {
     // Populate the show dropdown
     populateShowSelector() {
       const selector = document.getElementById("show-selector");
-      selector.innerHTML = "";
       state.showsList.forEach(({ id, name }) => {
         const option = document.createElement("option");
         option.value = id;
