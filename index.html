@@ -9,6 +9,12 @@
   </head>
   <body>
     <header>
+      <div id="show-selector-container">
+        <label for="show-selector"> </label>
+        <select id="show-selector" name="show-selector">
+          <option>All shows</option>
+        </select>
+      </div>
       <div id="season-filter">
         <select name="season-selector" id="season-selector"></select>
       </div>
@@ -20,7 +26,7 @@
       <div id="numbers-of-episodes" name="numbers-of-episodes"></div>
     </header>
 
-    <div id="root"></div>
+    <main id="root"></main>
 
     <!-- Script to load your custom JavaScript functionality -->
     <script src="script.js" defer></script>
