@@ -15,14 +15,16 @@ async function fetchShows() {
 }
 
 async function fetchingEpisodes(selectedShowId) {
-  const response = await fetch(
-    `https://api.tvmaze.com/shows/${selectedShowId}/episodes`
-  );
-  if (response.ok) {
-    const episodes = await response.json();
-    return episodes;
-  } else {
-    throw new Error(`Response status: ${response.status}`);
+  try {
+    const response = await fetch(
+      `https://api.tvmaze.com/shows/${selectedShowId}/episodes`
+    );
+    if (response.ok) {
+      const episodes = await response.json();
+      return episodes;
+    }
+  } catch (error) {
+    throw new Error(`Response status: ${error.message}`);
   }
 }
 
@@ -67,7 +69,7 @@ function handleSearchTermInput(e) {
   makePageForEpisodes(filteredList);
 }
 
-function handleSeasonSelector(e) {
+function handleSeasonSelector(e, allEpisodesList) {
   var seasonValue = e.target.value;
   document.getElementById("search-term-input").value = "";
   currentSearchTerm = "";
@@ -128,10 +130,12 @@ function createEpisodeCard({ name, season, number, url, image, summary }) {
   linkElement.href = url;
   linkElement.target = "_blank";
 
-  const imgElement = document.createElement("img");
-  imgElement.src = image.medium;
-  imgElement.alt = name;
-  linkElement.appendChild(imgElement);
+  if (image && image.medium) {
+    const imgElement = document.createElement("img");
+    imgElement.src = image.medium;
+    imgElement.alt = name;
+    linkElement.appendChild(imgElement);
+  }
 
   const summaryElement = document.createElement("div");
   summaryElement.innerHTML = summary;
@@ -163,11 +167,6 @@ function setup() {
         selector.appendChild(option);
       });
     },
-    async handleShowSelector(e) {
-      state.episodesList = await fetchingEpisodes(e);
-      console.log(state.episodesList);
-      makePageForEpisodes(state.episodesList);
-    },
     addFunctionality() {
       const selectElement = document.getElementById("show-selector");
       selectElement.addEventListener("change", async () => {
@@ -178,6 +177,7 @@ function setup() {
         state.searchTeam = "";
         if (selectedShowId !== state.currentShowId) {
           state.episodesList = await fetchingEpisodes(selectedShowId);
+          state.currentShowId = selectedShowId;
           makePageForEpisodes(state.episodesList);
           populateSeasonSelector(state.episodesList);
         }
@@ -185,9 +185,11 @@ function setup() {
       document
         .getElementById("search-term-input")
         .addEventListener("input", handleSearchTermInput);
-      document
-        .getElementById("season-selector")
-        .addEventListener("change", handleSeasonSelector);
+
+      const seasonSelector = document.getElementById("season-selector");
+      seasonSelector.addEventListener("change", (e) =>
+        handleSeasonSelector(e, state.episodesList)
+      );
     },
   };
 }
