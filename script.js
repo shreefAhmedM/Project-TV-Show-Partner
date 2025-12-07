@@ -14,19 +14,15 @@ async function fetchShows() {
   return sortedShows;
 }
 
-async function fetchingEpisodes(e) {
-  const selectedShowId = e.target.value;
-  console.log(selectedShowId);
-  if (state.currentShowId !== selectedShowId) {
-    const response = await fetch(
-      `https://api.tvmaze.com/shows/${selectedShowId}/episodes`
-    );
-    if (response.ok) {
-      const episodes = await response.json();
-      return episodes;
-    } else {
-      throw new Error(`Response status: ${response.status}`);
-    }
+async function fetchingEpisodes(selectedShowId) {
+  const response = await fetch(
+    `https://api.tvmaze.com/shows/${selectedShowId}/episodes`
+  );
+  if (response.ok) {
+    const episodes = await response.json();
+    return episodes;
+  } else {
+    throw new Error(`Response status: ${response.status}`);
   }
 }
 
@@ -97,6 +93,7 @@ function filterEpisodes(episodesList, searchTerm) {
 
 function populateSeasonSelector(episodes) {
   const selector = document.getElementById("season-selector");
+  selector.innerHTML = "";
   const availableSeasonsArray = Array.from(
     new Set(episodes.map((episodes) => episodes.season))
   );
@@ -144,43 +141,6 @@ function createEpisodeCard({ name, season, number, url, image, summary }) {
   return card;
 }
 
-function createHeader() {
-  const headerElement = document.createElement("header");
-  const bodyElement = document.querySelector("body");
-  const rootElement = document.getElementById("root");
-  bodyElement.insertBefore(headerElement, rootElement);
-}
-
-function createSelector(name) {
-  const selectorContainer = document.createElement("div");
-  selectorContainer.id = `${name}-container`;
-  const labelElement = document.createElement("label");
-  labelElement.htmlFor = name;
-  const selectElement = document.createElement("select");
-  selectElement.id = name;
-  selectElement.name = name;
-
-  const defaultOption = document.createElement("option");
-  defaultOption.value = "";
-  const items = name.split("-")[0];
-  defaultOption.textContent = `All ${items}s`;
-  selectElement.appendChild(defaultOption);
-
-  selectorContainer.appendChild(labelElement);
-  selectorContainer.appendChild(selectElement);
-  return selectorContainer;
-}
-
-function createSearchField() {
-  const episodeSearchDiv = document.createElement("div");
-  episodeSearchDiv.id = "episode-search";
-  const searchInput = document.createElement("input");
-  searchInput.type = "text";
-  searchInput.id = "search-term-input";
-  searchInput.placeholder = "Search term";
-  return episodeSearchDiv;
-}
-
 function setup() {
   const state = {
     showsList: [],
@@ -209,9 +169,19 @@ function setup() {
       makePageForEpisodes(state.episodesList);
     },
     addFunctionality() {
-      document
-        .getElementById("show-selector")
-        .addEventListener("change", this.handleShowSelector(e));
+      const selectElement = document.getElementById("show-selector");
+      selectElement.addEventListener("change", async () => {
+        const selectedShowId = selectElement.value;
+        if (!selectedShowId) return;
+
+        document.getElementById("episode-search").value = "";
+        state.searchTeam = "";
+        if (selectedShowId !== state.currentShowId) {
+          state.episodesList = await fetchingEpisodes(selectedShowId);
+          makePageForEpisodes(state.episodesList);
+          populateSeasonSelector(state.episodesList);
+        }
+      });
       document
         .getElementById("search-term-input")
         .addEventListener("input", handleSearchTermInput);
