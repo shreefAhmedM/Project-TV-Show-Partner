@@ -74,7 +74,7 @@ function populateSeasonSelector(episodes) {
   availableSeasonsArray.forEach((season) => {
     const seasonOption = document.createElement("option");
     seasonOption.value = `${season}`;
-    seasonOption.textContent = `S${String(season).padStart(2, "0")}`;
+    seasonOption.textContent = `Season ${String(season).padStart(2, "0")}`;
     seasonOption.ariaLabel = `season${season}`;
     selector.appendChild(seasonOption);
   });
