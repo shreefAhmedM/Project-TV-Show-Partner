@@ -1,7 +1,7 @@
-let allEpisodesList = [];
-let currentSearchTerm = "";
-let showsList = [];
-let episodesCache = {}; // cache episodes per show
+// let allEpisodesList = [];
+// let currentSearchTerm = "";
+// let showsList = [];
+// let episodesCache = {}; // cache episodes per show
 
 // Fetch all shows from TVMaze and populate the show selector
 async function fetchShows() {
@@ -61,7 +61,7 @@ function makePageForEpisodes(episodesList) {
 //     updateMatchCount(allEpisodesList.length, allEpisodesList.length);
 //   });
 
-function handleSearchTermInput(e) {
+function handleSearchTermInput(e, allEpisodesList) {
   currentSearchTerm = e.target.value.trim().toLowerCase();
   document.getElementById("season-selector").selectedIndex = 0;
   var filteredList = filterEpisodes(allEpisodesList, currentSearchTerm);
@@ -174,17 +174,24 @@ function setup() {
         if (!selectedShowId) return;
 
         document.getElementById("episode-search").value = "";
-        state.searchTeam = "";
+        state.currentSearchTerm = "";
+        document.getElementById("search-term-input").value = "";
         if (selectedShowId !== state.currentShowId) {
           state.episodesList = await fetchingEpisodes(selectedShowId);
           state.currentShowId = selectedShowId;
           makePageForEpisodes(state.episodesList);
           populateSeasonSelector(state.episodesList);
+          updateMatchCount(
+            state.episodesList.length,
+            state.episodesList.length
+          );
         }
       });
       document
         .getElementById("search-term-input")
-        .addEventListener("input", handleSearchTermInput);
+        .addEventListener("input", (e) =>
+          handleSearchTermInput(e, state.episodesList)
+        );
 
       const seasonSelector = document.getElementById("season-selector");
       seasonSelector.addEventListener("change", (e) =>
