@@ -1,9 +1,3 @@
-// let allEpisodesList = [];
-// let currentSearchTerm = "";
-// let showsList = [];
-// let episodesCache = {}; // cache episodes per show
-
-// Fetch all shows from TVMaze and populate the show selector
 async function fetchShows() {
   const response = await fetch("https://api.tvmaze.com/shows");
   if (!response.ok) throw new Error("Failed to fetch shows");
@@ -38,28 +32,6 @@ function makePageForEpisodes(episodesList) {
   );
   root.append(...episodeCards);
 }
-
-// When user selects a show, fetch episodes (or use cache)
-// document
-//   .getElementById("show-selector")
-//   .addEventListener("change", async (e) => {
-//     const showId = e.target.value;
-//     if (!episodesCache[showId]) {
-//       const res = await fetch(
-//         `https://api.tvmaze.com/shows/${showId}/episodes`
-//       );
-//       if (!res.ok) return alert("Failed to fetch episodes");
-//       const episodes = await res.json();
-//       episodesCache[showId] = episodes;
-//     }
-//     allEpisodesList = episodesCache[showId];
-//     // reset filters
-//     document.getElementById("search-term-input").value = "";
-//     document.getElementById("season-selector").selectedIndex = 0;
-//     makePageForEpisodes(allEpisodesList);
-//     populateSeasonSelector(allEpisodesList);
-//     updateMatchCount(allEpisodesList.length, allEpisodesList.length);
-//   });
 
 function handleSearchTermInput(e, allEpisodesList) {
   currentSearchTerm = e.target.value.trim().toLowerCase();
@@ -103,6 +75,7 @@ function populateSeasonSelector(episodes) {
     const seasonOption = document.createElement("option");
     seasonOption.value = `${season}`;
     seasonOption.textContent = `S${String(season).padStart(2, "0")}`;
+    seasonOption.ariaLabel = `season${season}`;
     selector.appendChild(seasonOption);
   });
 }
@@ -164,6 +137,7 @@ function setup() {
         const option = document.createElement("option");
         option.value = id;
         option.textContent = name;
+        option.ariaLabel = name;
         selector.appendChild(option);
       });
     },
