@@ -67,4 +67,12 @@ header {
   box-shadow: 1px 1px 1px 2px var(--box-shadow-grey);
   text-align: center;
   padding: 10px;
+  width: 300px;
+  border-radius: 5px;
+}
+
+#show-summary {
+  max-height: 300px;
+  overflow: scroll;
+  scrollbar-width: none;
 }

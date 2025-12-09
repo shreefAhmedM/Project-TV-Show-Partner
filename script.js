@@ -118,6 +118,7 @@ function createShowCard({
   }
 
   const summaryElement = document.createElement("div");
+  summaryElement.id = "show-summary";
   summaryElement.innerHTML = summary;
 
   const genresElement = document.createElement("h4");
