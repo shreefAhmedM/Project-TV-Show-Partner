@@ -33,6 +33,13 @@ function makePageForEpisodes(episodesList) {
   root.append(...episodeCards);
 }
 
+function makePageForShows(showsList) {
+  const root = document.getElementById("root");
+  root.innerHTML = "";
+  const showCards = showsList.map((show) => createShowCard(show));
+  root.append(...showCards);
+}
+
 function handleSearchTermInput(e, allEpisodesList) {
   currentSearchTerm = e.target.value.trim().toLowerCase();
   document.getElementById("season-selector").selectedIndex = 0;
@@ -111,21 +118,21 @@ function createShowCard({
   }
 
   const summaryElement = document.createElement("div");
-  summaryElement.textContent = summary;
+  summaryElement.innerHTML = summary;
 
-  const genresElement = document.createElement("div");
-  genresElement.textContent = genres;
+  const genresElement = document.createElement("h4");
+  genresElement.textContent = `Genres: ${genres.length === 0 ? "N/A" : genres}`;
 
-  const statusElement = document.createElement("div");
-  statusElement.textContent = status;
+  const statusElement = document.createElement("h4");
+  statusElement.textContent = `Status: ${status}`;
 
-  const ratingElement = document.createElement("div");
-  ratingElement.textContent = rating.average;
+  const ratingElement = document.createElement("h4");
+  ratingElement.textContent = `Rating: ${rating.average}`;
 
   const runtimeElement = document.createElement("div");
   runtimeElement.textContext = runtime;
 
-  showCard.appendChild(
+  showCard.append(
     nameElement,
     imageElement,
     summaryElement,
@@ -193,6 +200,7 @@ function setup() {
     // Populate the show dropdown
     renderPageForShows() {
       populateShowSelector(state.showsList);
+      makePageForShows(state.showsList);
     },
     addFunctionality() {
       const selectElement = document.getElementById("show-selector");
