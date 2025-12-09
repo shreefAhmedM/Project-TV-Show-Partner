@@ -76,3 +76,7 @@ header {
   overflow: scroll;
   scrollbar-width: none;
 }
+
+.show-name:hover {
+  color: blue;
+}

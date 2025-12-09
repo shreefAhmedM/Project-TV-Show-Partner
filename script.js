@@ -97,6 +97,7 @@ function padStartWithTwoZero(number) {
 }
 
 function createShowCard({
+  id,
   name,
   image,
   summary,
@@ -109,7 +110,13 @@ function createShowCard({
   showCard.className = "info-card";
 
   const nameElement = document.createElement("h2");
+  nameElement.className = "show-name";
   nameElement.textContent = name;
+  nameElement.addEventListener("click", async () => {
+    const selectElement = document.getElementById("show-selector");
+    selectElement.value = id;
+    selectElement.dispatchEvent(new Event("change"));
+  });
 
   const imageElement = document.createElement("img");
   if (image && image.medium) {
