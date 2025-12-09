@@ -138,6 +138,17 @@ function createShowCard({
   return showCard;
 }
 
+function populateShowSelector(showsList) {
+  const selector = document.getElementById("show-selector");
+  showsList.forEach(({ id, name }) => {
+    const option = document.createElement("option");
+    option.value = id;
+    option.textContent = name;
+    option.ariaLabel = name;
+    selector.appendChild(option);
+  });
+}
+
 function createEpisodeCard({ name, season, number, url, image, summary }) {
   const card = document.createElement("div");
   card.className = "info-card";
@@ -180,15 +191,8 @@ function setup() {
       state.showsList = await fetchShows();
     },
     // Populate the show dropdown
-    populateShowSelector() {
-      const selector = document.getElementById("show-selector");
-      state.showsList.forEach(({ id, name }) => {
-        const option = document.createElement("option");
-        option.value = id;
-        option.textContent = name;
-        option.ariaLabel = name;
-        selector.appendChild(option);
-      });
+    renderPageForShows() {
+      populateShowSelector(state.showsList);
     },
     addFunctionality() {
       const selectElement = document.getElementById("show-selector");
@@ -228,6 +232,6 @@ const tvShow = setup();
 
 window.onload = async () => {
   await tvShow.fetchShowsFromEndPoint();
-  tvShow.populateShowSelector();
+  tvShow.renderPageForShows();
   tvShow.addFunctionality();
 };
