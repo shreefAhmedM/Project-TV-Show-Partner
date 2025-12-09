@@ -89,9 +89,58 @@ function padStartWithTwoZero(number) {
   return String(number).padStart(2, "0");
 }
 
+function createShowCard({
+  name,
+  image,
+  summary,
+  genres,
+  status,
+  rating,
+  runtime,
+}) {
+  const showCard = document.createElement("div");
+  showCard.className = "info-card";
+
+  const nameElement = document.createElement("h2");
+  nameElement.textContent = name;
+
+  const imageElement = document.createElement("img");
+  if (image && image.medium) {
+    imageElement.src = image.medium;
+    imageElement.alt = name;
+  }
+
+  const summaryElement = document.createElement("div");
+  summaryElement.textContent = summary;
+
+  const genresElement = document.createElement("div");
+  genresElement.textContent = genres;
+
+  const statusElement = document.createElement("div");
+  statusElement.textContent = status;
+
+  const ratingElement = document.createElement("div");
+  ratingElement.textContent = rating.average;
+
+  const runtimeElement = document.createElement("div");
+  runtimeElement.textContext = runtime;
+
+  showCard.appendChild(
+    nameElement,
+    imageElement,
+    summaryElement,
+    genresElement,
+    statusElement,
+    ratingElement,
+    runtimeElement
+  );
+
+  return showCard;
+}
+
 function createEpisodeCard({ name, season, number, url, image, summary }) {
   const card = document.createElement("div");
-  card.className = "episode-card";
+  card.className = "info-card";
 
   const nameElement = document.createElement("h2");
   nameElement.textContent = name;
@@ -104,10 +153,10 @@ function createEpisodeCard({ name, season, number, url, image, summary }) {
   linkElement.target = "_blank";
 
   if (image && image.medium) {
-    const imgElement = document.createElement("img");
-    imgElement.src = image.medium;
-    imgElement.alt = name;
-    linkElement.appendChild(imgElement);
+    const imageElement = document.createElement("img");
+    imageElement.src = image.medium;
+    imageElement.alt = name;
+    linkElement.appendChild(imageElement);
   }
 
   const summaryElement = document.createElement("div");

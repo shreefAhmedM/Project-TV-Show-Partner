@@ -1,6 +1,7 @@
 :root {
   --box-shadow-grey: rgba(0, 0, 0, 0.1);
   --background-white: rgb(255, 255, 255);
+  --search-box-background: rgb(243, 240, 240);
 }
 
 body {
@@ -23,6 +24,18 @@ header {
   gap: 10px;
 }
 
+#show-filter-container label {
+  width: 65px;
+}
+
+#show-filter {
+  background-color: var(--search-box-background);
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  font-weight: bold;
+}
+
 #search-term-input {
   border: none;
   padding: 3px 8px;
@@ -30,7 +43,7 @@ header {
   font-size: 1rem;
   font-weight: bold;
   outline: none;
-  background-color: var(--background-white);
+  background-color: var(--search-box-background);
 }
 #episode-search {
   margin-left: 20px;
@@ -50,7 +63,7 @@ header {
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
-.episode-card {
+.info-card {
   box-shadow: 1px 1px 1px 2px var(--box-shadow-grey);
   text-align: center;
   padding: 10px;
