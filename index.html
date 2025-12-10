@@ -24,7 +24,7 @@
           <option aria-label="All shows" value="">All shows</option>
         </select>
       </div>
-      <div id="season-filter" display="none">
+      <div id="season-filter" style="display: none">
         <select name="season-selector" id="season-selector"></select>
       </div>
 
@@ -36,8 +36,10 @@
           aria-label="Input for search term in episode"
         />
       </div>
-      <label for="numbers-of-episodes">Episodes: </label>
-      <div id="numbers-of-episodes" name="numbers-of-episodes"></div>
+      <div id="episode-match" style="display: none">
+        <label for="numbers-of-episodes">Episodes: </label>
+        <div id="numbers-of-episodes" name="numbers-of-episodes"></div>
+      </div>
     </header>
 
     <main id="root"></main>

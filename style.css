@@ -14,10 +14,11 @@ body {
 header {
   width: 100%;
   display: flex;
-  justify-content: flex-start;
+  justify-content: space-evenly;
   align-items: center;
   margin: 20px 0;
   gap: 20px;
+  border: 1px solid;
 }
 
 #show-filter-container {
@@ -54,9 +55,6 @@ header {
 
 #numbers-of-episodes {
   box-shadow: 1px 1px 1px 2px var(--box-shadow-grey);
-  color: black;
-  margin-left: 8px;
-  padding: 2px 10px;
   border: none;
 }
 
@@ -93,4 +91,11 @@ header {
   color: var(--show-name-gold);
   background-color: var(--poster-background-grey);
   cursor: pointer;
+}
+
+#episode-match {
+  display: flex;
+  flex-direction: row;
+  border: 1px solid;
+  width: 50px;
 }

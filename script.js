@@ -23,6 +23,11 @@ async function fetchingEpisodes(selectedShowId) {
 }
 
 function makePageForEpisodes(episodesList) {
+  const seasonFilterField = document.getElementById("season-filter");
+  seasonFilterField.style.display = "block";
+  const episodeMatchField = document.getElementById("episode-match");
+  episodeMatchField.style.display = "block";
+
   const root = document.getElementById("root");
 
   root.innerHTML = "";
@@ -34,6 +39,11 @@ function makePageForEpisodes(episodesList) {
 }
 
 function makePageForShows(showsList) {
+  const seasonFilterField = document.getElementById("season-filter");
+  seasonFilterField.style.display = "none";
+  const episodeMatchField = document.getElementById("episode-match");
+  episodeMatchField.style.display = "none";
+
   const root = document.getElementById("root");
   root.innerHTML = "";
   const showCards = showsList.map((show) => createShowCard(show));
@@ -97,9 +107,6 @@ function populateSeasonSelector(episodes) {
     seasonOption.ariaLabel = `season${season}`;
     selector.appendChild(seasonOption);
   });
-
-  const seasonFilterField = document.getElementById("season-filter");
-  seasonFilterField.style.display = "block";
 }
 
 function updateMatchCount(filtered, total) {
@@ -232,7 +239,10 @@ function setup() {
       const selectElement = document.getElementById("show-selector");
       selectElement.addEventListener("change", async () => {
         const selectedShowId = selectElement.value;
-        if (!selectedShowId) return makePageForShows(state.showsList);
+        if (!selectedShowId) {
+          state.currentShowId = 0;
+          return makePageForShows(state.showsList);
+        }
 
         document.getElementById("episode-search").value = "";
         state.currentSearchTerm = "";
