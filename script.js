@@ -112,17 +112,21 @@ function createShowCard({
   const nameElement = document.createElement("h2");
   nameElement.className = "show-name";
   nameElement.textContent = name;
-  nameElement.addEventListener("click", async () => {
-    const selectElement = document.getElementById("show-selector");
-    selectElement.value = id;
-    selectElement.dispatchEvent(new Event("change"));
-  });
 
   const imageElement = document.createElement("img");
   if (image && image.medium) {
     imageElement.src = image.medium;
     imageElement.alt = name;
   }
+
+  const posterElement = document.createElement("div");
+  posterElement.classList = "show-poster";
+  posterElement.append(nameElement, imageElement);
+  posterElement.addEventListener("click", async () => {
+    const selectElement = document.getElementById("show-selector");
+    selectElement.value = id;
+    selectElement.dispatchEvent(new Event("change"));
+  });
 
   const summaryElement = document.createElement("div");
   summaryElement.id = "show-summary";
@@ -141,8 +145,7 @@ function createShowCard({
   runtimeElement.textContext = runtime;
 
   showCard.append(
-    nameElement,
-    imageElement,
+    posterElement,
     summaryElement,
     genresElement,
     statusElement,
