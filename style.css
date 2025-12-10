@@ -78,5 +78,7 @@ header {
 }
 
 .show-name:hover {
-  color: blue;
+  color: rgb(151, 130, 99);
+  font-size: 28px;
+  cursor: pointer;
 }
