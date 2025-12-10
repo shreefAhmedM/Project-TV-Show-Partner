@@ -54,13 +54,17 @@ function handleSeasonSelector(e, allEpisodesList) {
   currentSearchTerm = "";
   if (!seasonValue) {
     makePageForEpisodes(allEpisodesList);
+    updateMatchCount(allEpisodesList.length, allEpisodesList.length);
     return;
   }
-  let found = allEpisodesList.filter(
+  let episodesFoundList = allEpisodesList.filter(
     (episode) => episode.season === Number(seasonValue)
   );
-  makePageForEpisodes(found ? found : []);
-  updateMatchCount(found ? found.length : 0, allEpisodesList.length);
+  makePageForEpisodes(episodesFoundList ? episodesFoundList : []);
+  updateMatchCount(
+    episodesFoundList ? episodesFoundList.length : 0,
+    allEpisodesList.length
+  );
 }
 
 function filterEpisodes(episodesList, searchTerm) {
@@ -75,6 +79,14 @@ function filterEpisodes(episodesList, searchTerm) {
 function populateSeasonSelector(episodes) {
   const selector = document.getElementById("season-selector");
   selector.innerHTML = "";
+
+  const defaultOption = document.createElement("option");
+  defaultOption.textContent = "All seasons";
+  defaultOption.ariaLabel = "All seasons";
+  defaultOption.value = "";
+
+  selector.appendChild(defaultOption);
+
   const availableSeasonsArray = Array.from(
     new Set(episodes.map((episodes) => episodes.season))
   );
@@ -85,6 +97,9 @@ function populateSeasonSelector(episodes) {
     seasonOption.ariaLabel = `season${season}`;
     selector.appendChild(seasonOption);
   });
+
+  const seasonFilterField = document.getElementById("season-filter");
+  seasonFilterField.style.display = "block";
 }
 
 function updateMatchCount(filtered, total) {
@@ -217,7 +232,7 @@ function setup() {
       const selectElement = document.getElementById("show-selector");
       selectElement.addEventListener("change", async () => {
         const selectedShowId = selectElement.value;
-        if (!selectedShowId) return;
+        if (!selectedShowId) return makePageForShows(state.showsList);
 
         document.getElementById("episode-search").value = "";
         state.currentSearchTerm = "";

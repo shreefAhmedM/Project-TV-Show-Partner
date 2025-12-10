@@ -2,6 +2,8 @@
   --box-shadow-grey: rgba(0, 0, 0, 0.1);
   --background-white: rgb(255, 255, 255);
   --search-box-background: rgba(243, 240, 240, 0.5);
+  --show-name-gold: rgb(151, 130, 99);
+  --poster-background-grey: rgba(128, 128, 128, 0.4);
 }
 
 body {
@@ -76,10 +78,19 @@ header {
   overflow: scroll;
   scrollbar-width: none;
   background-color: var(--search-box-background);
+  border-radius: 5px;
+  position: relative;
+  top: 8px;
 }
 
-.show-name:hover {
-  color: rgb(151, 130, 99);
-  font-size: 28px;
+.show-poster {
+  padding: 5px;
+  padding-bottom: 15px;
+  border-radius: 5px;
+}
+
+.show-poster:hover {
+  color: var(--show-name-gold);
+  background-color: var(--poster-background-grey);
   cursor: pointer;
 }
