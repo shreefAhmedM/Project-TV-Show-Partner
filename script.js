@@ -23,10 +23,8 @@ async function fetchingEpisodes(selectedShowId) {
 }
 
 function makePageForEpisodes(episodesList) {
-  const seasonFilterField = document.getElementById("season-filter");
-  seasonFilterField.style.display = "block";
-  const episodeMatchField = document.getElementById("episode-match");
-  episodeMatchField.style.display = "block";
+  const episodeHeaderElement = document.getElementById("episode-page-header");
+  episodeHeaderElement.style.display = "block";
 
   const root = document.getElementById("root");
 
@@ -39,10 +37,8 @@ function makePageForEpisodes(episodesList) {
 }
 
 function makePageForShows(showsList) {
-  const seasonFilterField = document.getElementById("season-filter");
-  seasonFilterField.style.display = "none";
-  const episodeMatchField = document.getElementById("episode-match");
-  episodeMatchField.style.display = "none";
+  const episodeHeaderElement = document.getElementById("episode-page-header");
+  episodeHeaderElement.style.display = "none";
 
   const root = document.getElementById("root");
   root.innerHTML = "";
