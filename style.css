@@ -1,33 +1,49 @@
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
 :root {
   --box-shadow-grey: rgba(0, 0, 0, 0.1);
   --background-white: rgb(255, 255, 255);
-  --search-box-background: rgba(243, 240, 240, 0.5);
   --show-name-gold: rgb(151, 130, 99);
   --poster-background-grey: rgba(128, 128, 128, 0.4);
+  --header-background-color: rgb(47, 70, 80);
+  --header-font-color: white;
+  --header-font-size: 18px;
+  --header-component-height: 50px;
 }
 
 body {
   background-color: var(--background-white);
-  margin-left: 22rem;
-  margin-right: 27rem;
+  display: flex;
+  justify-content: center;
 }
+
 header {
-  width: 100%;
+  position: fixed;
+  background-color: var(--header-background-color);
+  width: 99%;
+  height: 150px;
+  padding: 15px;
+  color: var(--header-font-color);
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
   align-items: center;
-  margin: 20px 0;
   gap: 20px;
 }
 
-#show-page-header {
+#show-controls {
+  border: 1px solid white;
+  width: 90%;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
 }
 
-#episode-page-header {
+#episode-controls {
   display: flex;
   align-items: center;
   text-align: center;
@@ -42,30 +58,32 @@ header {
   gap: 10px;
 }
 
-#show-filter-container label {
-  width: 65px;
+#show-filter {
+  border: 1px solid;
+  border-radius: 25px;
+  font-size: var(--header-font-size);
+  font-weight: bold;
+  width: 350px;
+  height: var(--header-component-height);
+  padding-left: 10px;
 }
 
-#show-filter {
-  background-color: var(--search-box-background);
-  border: none;
-  outline: none;
-  font-size: 1rem;
-  font-weight: bold;
+#show-selector {
+  border: 1px solid;
+  padding-left: 10px;
+  height: var(--header-component-height);
+  font-size: var(--header-font-size);
 }
 
 #search-term-input {
-  border: none;
-  padding: 3px 8px;
-  width: 200px;
-  font-size: 1rem;
+  border: 1px solid white;
+  border-radius: 25px;
+  padding-left: 10px;
+  width: 250px;
+  height: var(--header-component-height);
+  font-size: var(--header-font-size);
   font-weight: bold;
   outline: none;
-  background-color: var(--search-box-background);
-}
-#episode-search {
-  margin-left: 20px;
-  margin-right: 20px;
 }
 
 #numbers-of-episodes {

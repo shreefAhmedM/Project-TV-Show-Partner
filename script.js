@@ -23,9 +23,6 @@ async function fetchingEpisodes(selectedShowId) {
 }
 
 function makePageForEpisodes(episodesList) {
-  const episodeHeaderElement = document.getElementById("episode-page-header");
-  episodeHeaderElement.style.display = "block";
-
   const root = document.getElementById("root");
 
   root.innerHTML = "";
@@ -37,9 +34,6 @@ function makePageForEpisodes(episodesList) {
 }
 
 function makePageForShows(showsList) {
-  const episodeHeaderElement = document.getElementById("episode-page-header");
-  episodeHeaderElement.style.display = "none";
-
   const root = document.getElementById("root");
   root.innerHTML = "";
   const showCards = showsList.map((show) => createShowCard(show));
@@ -236,6 +230,7 @@ function setup() {
       selectElement.addEventListener("change", async () => {
         const selectedShowId = selectElement.value;
         if (!selectedShowId) {
+          episodesList = [];
           state.currentShowId = 0;
           return makePageForShows(state.showsList);
         }
