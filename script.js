@@ -57,6 +57,14 @@ function handleSearchTermInput(e, allEpisodesList) {
   makePageForEpisodes(filteredList);
 }
 
+function handleShowSelector(episodesList) {
+  makePageForEpisodes(episodesList);
+  updateNavShowName(episodesList);
+  populateSeasonSelector(episodesList);
+  populateEpisodeSelector(episodesList);
+  updateMatchCount(episodesList, episodesList);
+}
+
 function handleSeasonSelector(e, allEpisodesList) {
   const seasonValue = e.target.value;
   document.getElementById("search-term-input").value = "";
@@ -104,6 +112,12 @@ function updateMatchCount(filtered, total) {
 
 function padStartWithTwoZero(number) {
   return String(number).padStart(2, "0");
+}
+
+function updateNavShowName(episodesList) {
+  const navShowNameElement = document.getElementById("nav-show-name");
+  const currentShowName = episodesList[0]._links.show.name;
+  navShowNameElement.textContent = currentShowName;
 }
 
 // create cards (shows, episodes)
@@ -293,10 +307,7 @@ function setup() {
         if (selectedShowId !== state.currentShowId) {
           state.episodesList = await fetchingEpisodes(selectedShowId);
           state.currentShowId = selectedShowId;
-          makePageForEpisodes(state.episodesList);
-          populateSeasonSelector(state.episodesList);
-          populateEpisodeSelector(state.episodesList);
-          updateMatchCount(state.episodesList, state.episodesList);
+          handleShowSelector(state.episodesList);
         }
       });
       document
