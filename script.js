@@ -295,7 +295,12 @@ function setup() {
       populateShowSelector(state.showsList);
       makePageForShows(state.showsList);
       state.episodesList = [];
+      state.currentSearchTerm = "";
+      state.currentShowId = 0;
       updateNavShowName(state.episodesList);
+      populateSeasonSelector(state.episodesList);
+      populateEpisodeSelector(state.episodesList);
+      updateMatchCount(state.episodesList, state.episodesList);
     },
     addFunctionality() {
       const selectElement = document.getElementById("show-selector");
