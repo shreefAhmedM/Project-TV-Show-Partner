@@ -59,10 +59,7 @@ function handleSearchTermInput(e, allEpisodesList) {
 
 function handleShowSelector(episodesList) {
   makePageForEpisodes(episodesList);
-  updateNavShowName(episodesList);
-  populateSeasonSelector(episodesList);
-  populateEpisodeSelector(episodesList);
-  updateMatchCount(episodesList, episodesList);
+  updateEpisodeControls(episodesList);
 }
 
 function handleSeasonSelector(e, allEpisodesList) {
@@ -122,6 +119,13 @@ function updateNavShowName(episodesList) {
   }
   const currentShowName = episodesList[0]._links.show.name;
   navShowNameElement.textContent = currentShowName;
+}
+
+function updateEpisodeControls(episodesList) {
+  updateNavShowName(episodesList);
+  populateSeasonSelector(episodesList);
+  populateEpisodeSelector(episodesList);
+  updateMatchCount(episodesList, episodesList);
 }
 
 // create cards (shows, episodes)
@@ -222,13 +226,23 @@ function createEpisodeCard({ name, season, number, url, image, summary }) {
 //Populate selectors (shows, seasons, and episodes)
 
 function populateShowSelector(showsList) {
-  const selector = document.getElementById("show-selector");
+  const showSelector = document.getElementById("show-selector");
+
+  showSelector.innerHTML = "";
+
+  const defaultOption = document.createElement("option");
+  defaultOption.textContent = "All shows";
+  defaultOption.ariaLabel = "All shows";
+  defaultOption.value = "";
+
+  showSelector.appendChild(defaultOption);
+
   showsList.forEach(({ id, name }) => {
     const option = document.createElement("option");
     option.value = id;
     option.textContent = name;
     option.ariaLabel = name;
-    selector.appendChild(option);
+    showSelector.appendChild(option);
   });
 }
 
@@ -297,15 +311,12 @@ function setup() {
       state.episodesList = [];
       state.currentSearchTerm = "";
       state.currentShowId = 0;
-      updateNavShowName(state.episodesList);
-      populateSeasonSelector(state.episodesList);
-      populateEpisodeSelector(state.episodesList);
-      updateMatchCount(state.episodesList, state.episodesList);
+      updateEpisodeControls(state.episodesList);
     },
     addFunctionality() {
-      const selectElement = document.getElementById("show-selector");
-      selectElement.addEventListener("change", async () => {
-        const selectedShowId = selectElement.value;
+      const showSelector = document.getElementById("show-selector");
+      showSelector.addEventListener("change", async () => {
+        const selectedShowId = showSelector.value;
         if (!selectedShowId) {
           episodesList = [];
           state.currentShowId = 0;
