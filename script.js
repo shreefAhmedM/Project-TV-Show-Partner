@@ -129,10 +129,11 @@ function createShowCard({
   if (image && image.medium) {
     imageElement.src = image.medium;
     imageElement.alt = name;
+    imageElement.className = "show-image";
   }
 
   const posterElement = document.createElement("div");
-  posterElement.classList = "show-poster";
+  posterElement.className = "show-poster";
   posterElement.append(nameElement, imageElement);
   posterElement.addEventListener("click", async () => {
     const selectElement = document.getElementById("show-selector");
@@ -141,8 +142,11 @@ function createShowCard({
   });
 
   const summaryElement = document.createElement("div");
-  summaryElement.id = "show-summary";
+  summaryElement.className = "show-summary";
   summaryElement.innerHTML = summary;
+
+  const extraInfoElement = document.createElement("div");
+  extraInfoElement.className = "show-extra-info";
 
   const genresElement = document.createElement("h4");
   genresElement.textContent = `Genres: ${genres.length === 0 ? "N/A" : genres}`;
@@ -153,17 +157,17 @@ function createShowCard({
   const ratingElement = document.createElement("h4");
   ratingElement.textContent = `Rating: ${rating.average}`;
 
-  const runtimeElement = document.createElement("div");
-  runtimeElement.textContext = runtime;
+  const runtimeElement = document.createElement("h4");
+  runtimeElement.innerText = `Runtime: ${runtime}`;
 
-  showCard.append(
-    posterElement,
-    summaryElement,
+  extraInfoElement.append(
     genresElement,
     statusElement,
     ratingElement,
     runtimeElement
   );
+
+  showCard.append(posterElement, summaryElement, extraInfoElement);
 
   return showCard;
 }
