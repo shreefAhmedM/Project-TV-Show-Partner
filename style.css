@@ -94,6 +94,44 @@ header {
   text-align: center;
   justify-content: space-evenly;
   gap: 20px;
+  font-size: var(--header-font-size);
+  font-weight: bold;
+}
+
+/* nav-bar */
+
+#nav-bar ul {
+  list-style-type: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+#nav-bar ul li {
+  font-size: var(--header-font-size);
+  font-weight: bold;
+}
+
+#nav-bar li + li::before {
+  content: "> ";
+  margin: 0 8px;
+  color: rgb(180, 180, 180);
+}
+
+#nav-home:hover {
+  color: var(--show-name-gold);
+  cursor: pointer;
+}
+
+/* season selector */
+
+#season-selector {
+  font-size: var(--header-font-size);
+}
+
+/* episode selector */
+#episode-selector {
+  font-size: var(--header-font-size);
 }
 
 #numbers-of-episodes {
@@ -107,14 +145,15 @@ header {
 
 #root {
   position: relative;
-  top: 150px;
+  top: 170px;
+  padding-bottom: 100px;
   width: auto;
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 30px;
 }
-.info-card {
-  box-shadow: 1px 1px 1px 2px var(--box-shadow-grey);
+.show-card {
+  box-shadow: 2px 2px 2px 4px var(--box-shadow-grey);
   text-align: center;
   padding: 10px;
   width: 300px;
@@ -130,7 +169,6 @@ header {
   height: 180px;
   overflow: scroll;
   scrollbar-width: none;
-  background-color: var(--search-box-background);
   border-radius: 5px;
   position: relative;
   top: 8px;
@@ -159,4 +197,12 @@ header {
 #episode-match {
   display: flex;
   flex-direction: row;
+}
+
+.episode-card {
+  box-shadow: 2px 2px 2px 4px var(--box-shadow-grey);
+  text-align: center;
+  padding: 10px;
+  width: 300px;
+  border-radius: 5px;
 }

@@ -1,3 +1,5 @@
+// fetching functions
+
 async function fetchShows() {
   const response = await fetch("https://api.tvmaze.com/shows");
   if (!response.ok) throw new Error("Failed to fetch shows");
@@ -22,6 +24,8 @@ async function fetchingEpisodes(selectedShowId) {
   }
 }
 
+// make page functions
+
 function makePageForEpisodes(episodesList) {
   const root = document.getElementById("root");
 
@@ -40,34 +44,51 @@ function makePageForShows(showsList) {
   root.append(...showCards);
 }
 
+// handler functions
+
 function handleSearchTermInput(e, allEpisodesList) {
   currentSearchTerm = e.target.value.trim().toLowerCase();
   document.getElementById("season-selector").selectedIndex = 0;
-  var filteredList = filterEpisodes(allEpisodesList, currentSearchTerm);
-  updateMatchCount(filteredList.length, allEpisodesList.length);
+  var filteredList = filterEpisodesBySearchTerm(
+    allEpisodesList,
+    currentSearchTerm
+  );
+  updateMatchCount(filteredList, allEpisodesList);
   makePageForEpisodes(filteredList);
 }
 
 function handleSeasonSelector(e, allEpisodesList) {
-  var seasonValue = e.target.value;
+  const seasonValue = e.target.value;
   document.getElementById("search-term-input").value = "";
   currentSearchTerm = "";
   if (!seasonValue) {
     makePageForEpisodes(allEpisodesList);
-    updateMatchCount(allEpisodesList.length, allEpisodesList.length);
+    updateMatchCount(allEpisodesList, allEpisodesList);
     return;
   }
   let episodesFoundList = allEpisodesList.filter(
     (episode) => episode.season === Number(seasonValue)
   );
   makePageForEpisodes(episodesFoundList ? episodesFoundList : []);
-  updateMatchCount(
-    episodesFoundList ? episodesFoundList.length : 0,
-    allEpisodesList.length
-  );
+  updateMatchCount(episodesFoundList ? episodesFoundList : 0, allEpisodesList);
 }
 
-function filterEpisodes(episodesList, searchTerm) {
+function handleEpisodeSelector(e, allEpisodesList) {
+  const episodeValue = e.target.value;
+  if (!episodeValue) {
+    makePageForEpisodes(allEpisodesList);
+    updateMatchCount(allEpisodesList, allEpisodesList);
+    return;
+  }
+  const episodeId = Number(episodeValue);
+  const episodeSelected = allEpisodesList.filter(({ id }) => id === episodeId);
+  makePageForEpisodes(episodeSelected ? episodeSelected : []);
+  updateMatchCount(episodeSelected ? episodeSelected : 0, allEpisodesList);
+}
+
+// utility functions
+
+function filterEpisodesBySearchTerm(episodesList, searchTerm) {
   if (!searchTerm) return episodesList;
   return episodesList.filter(
     (episode) =>
@@ -76,37 +97,16 @@ function filterEpisodes(episodesList, searchTerm) {
   );
 }
 
-function populateSeasonSelector(episodes) {
-  const selector = document.getElementById("season-selector");
-  selector.innerHTML = "";
-
-  const defaultOption = document.createElement("option");
-  defaultOption.textContent = "All seasons";
-  defaultOption.ariaLabel = "All seasons";
-  defaultOption.value = "";
-
-  selector.appendChild(defaultOption);
-
-  const availableSeasonsArray = Array.from(
-    new Set(episodes.map((episodes) => episodes.season))
-  );
-  availableSeasonsArray.forEach((season) => {
-    const seasonOption = document.createElement("option");
-    seasonOption.value = `${season}`;
-    seasonOption.textContent = `Season ${String(season).padStart(2, "0")}`;
-    seasonOption.ariaLabel = `season${season}`;
-    selector.appendChild(seasonOption);
-  });
-}
-
 function updateMatchCount(filtered, total) {
   document.getElementById("numbers-of-episodes").textContent =
-    `${filtered}/${total}`;
+    `${filtered.length}/${total.length}`;
 }
 
 function padStartWithTwoZero(number) {
   return String(number).padStart(2, "0");
 }
+
+// create cards (shows, episodes)
 
 function createShowCard({
   id,
@@ -119,7 +119,7 @@ function createShowCard({
   runtime,
 }) {
   const showCard = document.createElement("div");
-  showCard.className = "info-card";
+  showCard.className = "show-card";
 
   const nameElement = document.createElement("h2");
   nameElement.className = "show-name";
@@ -158,7 +158,7 @@ function createShowCard({
   ratingElement.textContent = `Rating: ${rating.average}`;
 
   const runtimeElement = document.createElement("h4");
-  runtimeElement.innerText = `Runtime: ${runtime}`;
+  runtimeElement.innerText = `Runtime: ${runtime} minutes`;
 
   extraInfoElement.append(
     genresElement,
@@ -172,20 +172,9 @@ function createShowCard({
   return showCard;
 }
 
-function populateShowSelector(showsList) {
-  const selector = document.getElementById("show-selector");
-  showsList.forEach(({ id, name }) => {
-    const option = document.createElement("option");
-    option.value = id;
-    option.textContent = name;
-    option.ariaLabel = name;
-    selector.appendChild(option);
-  });
-}
-
 function createEpisodeCard({ name, season, number, url, image, summary }) {
   const card = document.createElement("div");
-  card.className = "info-card";
+  card.className = "episode-card";
 
   const nameElement = document.createElement("h2");
   nameElement.textContent = name;
@@ -211,6 +200,65 @@ function createEpisodeCard({ name, season, number, url, image, summary }) {
 
   return card;
 }
+
+//Populate selectors (shows, seasons, and episodes)
+
+function populateShowSelector(showsList) {
+  const selector = document.getElementById("show-selector");
+  showsList.forEach(({ id, name }) => {
+    const option = document.createElement("option");
+    option.value = id;
+    option.textContent = name;
+    option.ariaLabel = name;
+    selector.appendChild(option);
+  });
+}
+
+function populateSeasonSelector(episodes) {
+  const seasonSelector = document.getElementById("season-selector");
+  seasonSelector.innerHTML = "";
+
+  const defaultOption = document.createElement("option");
+  defaultOption.textContent = "All seasons";
+  defaultOption.ariaLabel = "All seasons";
+  defaultOption.value = "";
+
+  seasonSelector.appendChild(defaultOption);
+
+  const availableSeasonsArray = Array.from(
+    new Set(episodes.map((episodes) => episodes.season))
+  );
+  availableSeasonsArray.forEach((season) => {
+    const seasonOption = document.createElement("option");
+    seasonOption.value = `${season}`;
+    seasonOption.textContent = `Season ${padStartWithTwoZero(season)}`;
+    seasonOption.ariaLabel = `season${season}`;
+    seasonSelector.appendChild(seasonOption);
+  });
+}
+
+function populateEpisodeSelector(episodes) {
+  const episodeSelector = document.getElementById("episode-selector");
+  episodeSelector.innerHTML = "";
+
+  const defaultOption = document.createElement("option");
+  defaultOption.textContent = "All episodes";
+  defaultOption.ariaLabel = "All episodes";
+  defaultOption.value = "";
+
+  episodeSelector.appendChild(defaultOption);
+
+  episodes.forEach(({ id, season, number, name }) => {
+    const episodeOption = document.createElement("option");
+    const seasonAndEpisodeNumber = `S${padStartWithTwoZero(season)}E${padStartWithTwoZero(number)}`;
+    episodeOption.value = id;
+    episodeOption.textContent = `${seasonAndEpisodeNumber} - ${name}`;
+    episodeOption.ariaLabel = name;
+    episodeSelector.appendChild(episodeOption);
+  });
+}
+
+// main function
 
 function setup() {
   const state = {
@@ -247,10 +295,8 @@ function setup() {
           state.currentShowId = selectedShowId;
           makePageForEpisodes(state.episodesList);
           populateSeasonSelector(state.episodesList);
-          updateMatchCount(
-            state.episodesList.length,
-            state.episodesList.length
-          );
+          populateEpisodeSelector(state.episodesList);
+          updateMatchCount(state.episodesList, state.episodesList);
         }
       });
       document
@@ -263,6 +309,11 @@ function setup() {
       seasonSelector.addEventListener("change", (e) =>
         handleSeasonSelector(e, state.episodesList)
       );
+
+      const episodeSelector = document.getElementById("episode-selector");
+      episodeSelector.addEventListener("change", (e) => {
+        handleEpisodeSelector(e, state.episodesList);
+      });
     },
   };
 }
