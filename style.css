@@ -134,9 +134,9 @@ header {
   font-size: var(--header-font-size);
 }
 
-#numbers-of-episodes {
-  box-shadow: 1px 1px 1px 2px var(--box-shadow-grey);
-  border: none;
+#episode-match {
+  display: flex;
+  flex-direction: row;
 }
 
 /* header elements above */
@@ -194,15 +194,13 @@ header {
   cursor: pointer;
 }
 
-#episode-match {
-  display: flex;
-  flex-direction: row;
-}
-
 .episode-card {
   box-shadow: 2px 2px 2px 4px var(--box-shadow-grey);
   text-align: center;
-  padding: 10px;
+  padding: 15px;
   width: 300px;
   border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
