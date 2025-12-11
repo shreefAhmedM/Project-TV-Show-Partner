@@ -116,6 +116,10 @@ function padStartWithTwoZero(number) {
 
 function updateNavShowName(episodesList) {
   const navShowNameElement = document.getElementById("nav-show-name");
+  if (episodesList.length === 0) {
+    navShowNameElement.textContent = "";
+    return;
+  }
   const currentShowName = episodesList[0]._links.show.name;
   navShowNameElement.textContent = currentShowName;
 }
@@ -290,6 +294,8 @@ function setup() {
     renderPageForShows() {
       populateShowSelector(state.showsList);
       makePageForShows(state.showsList);
+      state.episodesList = [];
+      updateNavShowName(state.episodesList);
     },
     addFunctionality() {
       const selectElement = document.getElementById("show-selector");
