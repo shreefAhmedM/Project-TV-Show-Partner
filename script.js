@@ -286,7 +286,7 @@ function setup() {
     async fetchShowsFromEndPoint() {
       state.showsList = await fetchShows();
     },
-    // Populate the show dropdown
+    // default setting for the page
     renderPageForShows() {
       populateShowSelector(state.showsList);
       makePageForShows(state.showsList);
@@ -298,7 +298,7 @@ function setup() {
         if (!selectedShowId) {
           episodesList = [];
           state.currentShowId = 0;
-          return makePageForShows(state.showsList);
+          return this.renderPageForShows();
         }
 
         document.getElementById("episode-search").value = "";
@@ -324,6 +324,11 @@ function setup() {
       const episodeSelector = document.getElementById("episode-selector");
       episodeSelector.addEventListener("change", (e) => {
         handleEpisodeSelector(e, state.episodesList);
+      });
+
+      const navHomeElement = document.getElementById("nav-home");
+      navHomeElement.addEventListener("click", () => {
+        this.renderPageForShows();
       });
     },
   };
