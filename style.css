@@ -21,6 +21,8 @@ body {
   justify-content: center;
 }
 
+/* header elements below */
+
 header {
   position: fixed;
   background-color: var(--header-background-color);
@@ -35,21 +37,14 @@ header {
   gap: 20px;
 }
 
+/* show controls below */
+
 #show-controls {
   border: 1px solid white;
   width: 90%;
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-}
-
-#episode-controls {
-  display: flex;
-  align-items: center;
-  text-align: center;
-  justify-content: space-evenly;
-  gap: 20px;
-  width: 100%;
 }
 
 #show-filter-container {
@@ -85,11 +80,27 @@ header {
   font-weight: bold;
   outline: none;
 }
+/* show controls above */
+
+/* episode controls */
+
+#episode-controls {
+  border: 1px solid;
+  width: 100%;
+  height: var(--header-component-height);
+  display: flex;
+  align-items: center;
+  text-align: center;
+  justify-content: space-evenly;
+  gap: 20px;
+}
 
 #numbers-of-episodes {
   box-shadow: 1px 1px 1px 2px var(--box-shadow-grey);
   border: none;
 }
+
+/* header elements above */
 
 #root {
   display: grid;
