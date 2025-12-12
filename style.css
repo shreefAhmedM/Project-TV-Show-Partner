@@ -41,7 +41,6 @@ header {
 /* show controls below */
 
 #show-controls {
-  border: 1px solid white;
   width: 90%;
   display: flex;
   align-items: center;
@@ -86,7 +85,6 @@ header {
 /* episode controls */
 
 #episode-controls {
-  border: 1px solid;
   width: 100%;
   height: var(--header-component-height);
   display: flex;
@@ -210,4 +208,11 @@ header {
 #loading-message,
 #error-message {
   font-size: 22px;
+}
+
+footer {
+  position: fixed;
+  bottom: 10px;
+  font-weight: bold;
+  background-color: var(--header-background-color);
 }

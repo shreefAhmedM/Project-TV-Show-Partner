@@ -67,9 +67,10 @@ function handleSearchTermInput(e, allEpisodesList) {
 }
 
 function handleShowSelector(episodesList) {
-  document.getElementById("search-term-input").value = "";
+  resetSearchTerm();
   makePageForEpisodes(episodesList);
   updateEpisodeControls(episodesList);
+  document.getElementById("episode-controls").style.display = "flex";
 }
 
 function handleSeasonSelector(e, allEpisodesList) {
@@ -104,6 +105,7 @@ function handleEpisodeSelector(e, allEpisodesList) {
 }
 
 function handleShowFilter(e, allShowsList) {
+  document.getElementById("episode-controls").style.display = "none";
   const searchTerm = e.target.value.trim().toLowerCase();
   const filteredShowsList = filterBySearchTerm(allShowsList, searchTerm);
   makePageForShows(filteredShowsList);
@@ -133,10 +135,7 @@ function filterBySearchTerm(list, searchTerm) {
   if (!searchTerm) return list;
   return list.filter(({ name, summary, genres }) => {
     const nameMatch = (name ?? "").toLowerCase().includes(searchTerm);
-    const summaryMatch = (summary ?? "")
-      .replace(/<[^>]*>/g, "")
-      .toLowerCase()
-      .includes(searchTerm);
+    const summaryMatch = (summary ?? "").toLowerCase().includes(searchTerm);
     const genreMatch = genres?.some((genre) =>
       genre.toLowerCase().includes(searchTerm)
     );
@@ -168,6 +167,11 @@ function updateEpisodeControls(episodesList) {
   populateSeasonSelector(episodesList);
   populateEpisodeSelector(episodesList);
   updateMatchCount(episodesList, episodesList);
+}
+
+function resetSearchTerm() {
+  document.getElementById("search-term-input").value = "";
+  document.getElementById("show-filter").value = "";
 }
 
 // create cards (shows, episodes)
@@ -351,12 +355,13 @@ function setup() {
       makePageForShows(state.showsList);
       state.episodesList = [];
       state.currentShowId = 0;
-      document.getElementById("search-term-input").value = "";
+      resetSearchTerm();
       updateEpisodeControls(state.episodesList);
+      document.getElementById("episode-controls").style.display = "none";
     },
     addFunctionality() {
       const showFilter = document.getElementById("show-filter");
-      showFilter.addEventListener("change", (e) => {
+      showFilter.addEventListener("input", (e) => {
         handleShowFilter(e, state.showsList);
       });
 
