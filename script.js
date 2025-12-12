@@ -49,16 +49,17 @@ function makePageForShows(showsList) {
 function handleSearchTermInput(e, allEpisodesList) {
   const currentSearchTerm = e.target.value.trim().toLowerCase();
   document.getElementById("season-selector").selectedIndex = 0;
+  document.getElementById("episode-selector").selectedIndex = 0;
   var filteredList = filterEpisodesBySearchTerm(
     allEpisodesList,
     currentSearchTerm
   );
-  populateEpisodeSelector(allEpisodesList);
   updateMatchCount(filteredList, allEpisodesList);
   makePageForEpisodes(filteredList);
 }
 
 function handleShowSelector(episodesList) {
+  document.getElementById("search-term-input").value = "";
   makePageForEpisodes(episodesList);
   updateEpisodeControls(episodesList);
 }
@@ -66,6 +67,7 @@ function handleShowSelector(episodesList) {
 function handleSeasonSelector(e, allEpisodesList) {
   const seasonValue = e.target.value;
   document.getElementById("search-term-input").value = "";
+  document.getElementById("episode-selector").selectedIndex = 0;
   currentSearchTerm = "";
   if (!seasonValue) {
     makePageForEpisodes(allEpisodesList);
@@ -75,7 +77,6 @@ function handleSeasonSelector(e, allEpisodesList) {
   let episodesFoundList = allEpisodesList.filter(
     (episode) => episode.season === Number(seasonValue)
   );
-  populateEpisodeSelector(allEpisodesList);
   makePageForEpisodes(episodesFoundList ? episodesFoundList : []);
   updateMatchCount(episodesFoundList ? episodesFoundList : 0, allEpisodesList);
 }
@@ -89,21 +90,23 @@ function handleEpisodeSelector(e, allEpisodesList) {
   }
   const episodeId = Number(episodeValue);
   const episodeSelected = allEpisodesList.filter(({ id }) => id === episodeId);
-  populateSeasonSelector(allEpisodesList);
   makePageForEpisodes(episodeSelected ? episodeSelected : []);
   updateMatchCount(episodeSelected ? episodeSelected : 0, allEpisodesList);
   document.getElementById("search-term-input").value = "";
+  document.getElementById("season-selector").selectedIndex = 0;
 }
 
 // utility functions
 
 function filterEpisodesBySearchTerm(episodesList, searchTerm) {
   if (!searchTerm) return episodesList;
-  return episodesList.filter(
-    (episode) =>
-      episode.name.toLowerCase().includes(searchTerm) ||
-      episode.summary.toLowerCase().includes(searchTerm)
-  );
+  return episodesList.filter(({ name, summary }) => {
+    const nameElement = (name ?? "").toLowerCase();
+    const summaryElement = (summary ?? "").toLowerCase();
+    return (
+      nameElement.includes(searchTerm) || summaryElement.includes(searchTerm)
+    );
+  });
 }
 
 function updateMatchCount(filtered, total) {
@@ -300,7 +303,6 @@ function setup() {
   const state = {
     showsList: [],
     episodesList: [],
-    currentSearchTerm: "",
     currentShowId: 0,
   };
 
@@ -313,8 +315,8 @@ function setup() {
       populateShowSelector(state.showsList);
       makePageForShows(state.showsList);
       state.episodesList = [];
-      state.currentSearchTerm = "";
       state.currentShowId = 0;
+      document.getElementById("search-term-input").value = "";
       updateEpisodeControls(state.episodesList);
     },
     addFunctionality() {
@@ -322,14 +324,9 @@ function setup() {
       showSelector.addEventListener("change", async () => {
         const selectedShowId = showSelector.value;
         if (!selectedShowId) {
-          episodesList = [];
-          state.currentShowId = 0;
           return this.renderPageForShows();
         }
 
-        document.getElementById("episode-search").value = "";
-        state.currentSearchTerm = "";
-        document.getElementById("search-term-input").value = "";
         if (selectedShowId !== state.currentShowId) {
           state.episodesList = await fetchingEpisodes(selectedShowId);
           state.currentShowId = selectedShowId;
