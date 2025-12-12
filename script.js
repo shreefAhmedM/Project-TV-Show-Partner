@@ -61,10 +61,7 @@ function handleSearchTermInput(e, allEpisodesList) {
   const currentSearchTerm = e.target.value.trim().toLowerCase();
   document.getElementById("season-selector").selectedIndex = 0;
   document.getElementById("episode-selector").selectedIndex = 0;
-  var filteredList = filterEpisodesBySearchTerm(
-    allEpisodesList,
-    currentSearchTerm
-  );
+  var filteredList = filterBySearchTerm(allEpisodesList, currentSearchTerm);
   updateMatchCount(filteredList, allEpisodesList);
   makePageForEpisodes(filteredList);
 }
@@ -106,6 +103,12 @@ function handleEpisodeSelector(e, allEpisodesList) {
   document.getElementById("season-selector").selectedIndex = 0;
 }
 
+function handleShowFilter(e, allShowsList) {
+  const searchTerm = e.target.value.trim().toLowerCase();
+  const filteredShowsList = filterBySearchTerm(allShowsList, searchTerm);
+  makePageForShows(filteredShowsList);
+}
+
 // utility functions
 
 function loadingData() {
@@ -126,14 +129,18 @@ function showError(message) {
   root.appendChild(errorMessage);
 }
 
-function filterEpisodesBySearchTerm(episodesList, searchTerm) {
-  if (!searchTerm) return episodesList;
-  return episodesList.filter(({ name, summary }) => {
-    const nameElement = (name ?? "").toLowerCase();
-    const summaryElement = (summary ?? "").toLowerCase();
-    return (
-      nameElement.includes(searchTerm) || summaryElement.includes(searchTerm)
+function filterBySearchTerm(list, searchTerm) {
+  if (!searchTerm) return list;
+  return list.filter(({ name, summary, genres }) => {
+    const nameMatch = (name ?? "").toLowerCase().includes(searchTerm);
+    const summaryMatch = (summary ?? "")
+      .replace(/<[^>]*>/g, "")
+      .toLowerCase()
+      .includes(searchTerm);
+    const genreMatch = genres?.some((genre) =>
+      genre.toLowerCase().includes(searchTerm)
     );
+    return nameMatch || summaryMatch || genreMatch;
   });
 }
 
@@ -349,7 +356,9 @@ function setup() {
     },
     addFunctionality() {
       const showFilter = document.getElementById("show-filter");
-      showFilter.addEventListener("change", (e) => {});
+      showFilter.addEventListener("change", (e) => {
+        handleShowFilter(e, state.showsList);
+      });
 
       const showSelector = document.getElementById("show-selector");
       showSelector.addEventListener("change", async (e) => {
