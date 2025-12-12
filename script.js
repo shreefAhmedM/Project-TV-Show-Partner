@@ -342,7 +342,7 @@ function setup() {
   const state = {
     showsList: [],
     episodesList: [],
-    currentShowId: 0,
+    episodesCache: {},
   };
 
   return {
@@ -354,7 +354,6 @@ function setup() {
       populateShowSelector(state.showsList);
       makePageForShows(state.showsList);
       state.episodesList = [];
-      state.currentShowId = 0;
       resetSearchTerm();
       updateEpisodeControls(state.episodesList);
       document.getElementById("episode-controls").style.display = "none";
@@ -371,11 +370,15 @@ function setup() {
         if (!selectedShowId) {
           return this.renderPageForShows();
         }
-        if (selectedShowId !== state.currentShowId) {
-          state.episodesList = await fetchingEpisodes(selectedShowId);
-          state.currentShowId = selectedShowId;
-          handleShowSelector(state.episodesList);
+        if (state.episodesCache[selectedShowId]) {
+          console.log("already got this");
+          return handleShowSelector(state.episodesCache[selectedShowId]);
         }
+        const fetchedEpisodes = await fetchingEpisodes(selectedShowId);
+        state.episodesList = fetchedEpisodes;
+        state.episodesCache[selectedShowId] = fetchedEpisodes;
+        console.log("fetching a new show");
+        handleShowSelector(state.episodesList);
       });
 
       const searchTermInput = document.getElementById("search-term-input");
