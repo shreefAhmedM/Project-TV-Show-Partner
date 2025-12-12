@@ -1,25 +1,36 @@
 // fetching functions
 
 async function fetchShows() {
-  const response = await fetch("https://api.tvmaze.com/shows");
-  if (!response.ok) throw new Error("Failed to fetch shows");
-  const shows = await response.json();
-  const sortedShows = shows.sort((a, b) =>
-    a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-  );
-  return sortedShows;
+  loadingData();
+  try {
+    const response = await fetch("https://api.tvmaze.com/shows");
+    if (!response.ok)
+      throw new Error(`Failed to fetch shows: ${response.status}`);
+    const shows = await response.json();
+    const sortedShows = shows.sort((a, b) =>
+      a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+    );
+    return sortedShows;
+  } catch (error) {
+    showError(error.message);
+    throw new Error(`Response status: ${error.message}`);
+  }
 }
 
 async function fetchingEpisodes(selectedShowId) {
+  loadingData();
   try {
     const response = await fetch(
       `https://api.tvmaze.com/shows/${selectedShowId}/episodes`
     );
-    if (response.ok) {
-      const episodes = await response.json();
-      return episodes;
-    }
+
+    if (!response.ok)
+      throw new Error(`Failed to fetch episodes: ${response.status}`);
+
+    const episodes = await response.json();
+    return episodes;
   } catch (error) {
+    showError(error.message);
     throw new Error(`Response status: ${error.message}`);
   }
 }
@@ -68,7 +79,6 @@ function handleSeasonSelector(e, allEpisodesList) {
   const seasonValue = e.target.value;
   document.getElementById("search-term-input").value = "";
   document.getElementById("episode-selector").selectedIndex = 0;
-  currentSearchTerm = "";
   if (!seasonValue) {
     makePageForEpisodes(allEpisodesList);
     updateMatchCount(allEpisodesList, allEpisodesList);
@@ -77,7 +87,7 @@ function handleSeasonSelector(e, allEpisodesList) {
   let episodesFoundList = allEpisodesList.filter(
     (episode) => episode.season === Number(seasonValue)
   );
-  makePageForEpisodes(episodesFoundList ? episodesFoundList : []);
+  makePageForEpisodes(episodesFoundList);
   updateMatchCount(episodesFoundList ? episodesFoundList : 0, allEpisodesList);
 }
 
@@ -90,13 +100,31 @@ function handleEpisodeSelector(e, allEpisodesList) {
   }
   const episodeId = Number(episodeValue);
   const episodeSelected = allEpisodesList.filter(({ id }) => id === episodeId);
-  makePageForEpisodes(episodeSelected ? episodeSelected : []);
+  makePageForEpisodes(episodeSelected);
   updateMatchCount(episodeSelected ? episodeSelected : 0, allEpisodesList);
   document.getElementById("search-term-input").value = "";
   document.getElementById("season-selector").selectedIndex = 0;
 }
 
 // utility functions
+
+function loadingData() {
+  const root = document.getElementById("root");
+  root.innerHTML = "";
+  const loading = document.createElement("p");
+  loading.id = "loading-message";
+  loading.textContent = "Loading data, please wait...";
+  root.appendChild(loading);
+}
+
+function showError(message) {
+  const root = document.getElementById("root");
+  root.innerHTML = "";
+  const errorMessage = document.createElement("p");
+  errorMessage.id = "error-message";
+  errorMessage.textContent = `Something went wrong: ${message}`;
+  root.appendChild(errorMessage);
+}
 
 function filterEpisodesBySearchTerm(episodesList, searchTerm) {
   if (!searchTerm) return episodesList;
@@ -124,7 +152,7 @@ function updateNavShowName(episodesList) {
     navShowNameElement.textContent = "";
     return;
   }
-  const currentShowName = episodesList[0]._links.show.name;
+  const currentShowName = episodesList[0]?._links?.show?.name ?? "";
   navShowNameElement.textContent = currentShowName;
 }
 
@@ -223,7 +251,7 @@ function createEpisodeCard({ name, season, number, url, image, summary }) {
   }
 
   const summaryElement = document.createElement("div");
-  summaryElement.innerHTML = summary;
+  summaryElement.innerHTML = summary ?? "<p>No summary available.</p>";
 
   card.append(nameElement, seasonElement, linkElement, summaryElement);
 
@@ -320,24 +348,26 @@ function setup() {
       updateEpisodeControls(state.episodesList);
     },
     addFunctionality() {
+      const showFilter = document.getElementById("show-filter");
+      showFilter.addEventListener("change", (e) => {});
+
       const showSelector = document.getElementById("show-selector");
-      showSelector.addEventListener("change", async () => {
-        const selectedShowId = showSelector.value;
+      showSelector.addEventListener("change", async (e) => {
+        const selectedShowId = e.target.value;
         if (!selectedShowId) {
           return this.renderPageForShows();
         }
-
         if (selectedShowId !== state.currentShowId) {
           state.episodesList = await fetchingEpisodes(selectedShowId);
           state.currentShowId = selectedShowId;
           handleShowSelector(state.episodesList);
         }
       });
-      document
-        .getElementById("search-term-input")
-        .addEventListener("input", (e) =>
-          handleSearchTermInput(e, state.episodesList)
-        );
+
+      const searchTermInput = document.getElementById("search-term-input");
+      searchTermInput.addEventListener("input", (e) =>
+        handleSearchTermInput(e, state.episodesList)
+      );
 
       const seasonSelector = document.getElementById("season-selector");
       seasonSelector.addEventListener("change", (e) =>

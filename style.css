@@ -204,3 +204,10 @@ header {
   flex-direction: column;
   gap: 20px;
 }
+
+/* loading and error */
+
+#loading-message,
+#error-message {
+  font-size: 22px;
+}
