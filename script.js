@@ -372,6 +372,7 @@ function setup() {
         }
         if (state.episodesCache[selectedShowId]) {
           console.log("already got this");
+          state.episodesList = state.episodesCache[selectedShowId];
           return handleShowSelector(state.episodesCache[selectedShowId]);
         }
         const fetchedEpisodes = await fetchingEpisodes(selectedShowId);
