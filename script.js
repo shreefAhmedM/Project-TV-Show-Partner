@@ -174,6 +174,22 @@ function resetSearchTerm() {
   document.getElementById("show-filter").value = "";
 }
 
+function imageMemory() {
+  const imageCache = {};
+
+  return function getImage(url, alt) {
+    if (!imageCache[url]) {
+      const img = new Image();
+      img.src = url;
+      img.alt = alt;
+      imageCache[url] = img;
+    }
+    return imageCache[url];
+  };
+}
+
+const getImage = imageMemory();
+
 // create cards (shows, episodes)
 
 function createShowCard({
@@ -193,10 +209,9 @@ function createShowCard({
   nameElement.className = "show-name";
   nameElement.textContent = name;
 
-  const imageElement = document.createElement("img");
+  let imageElement;
   if (image && image.medium) {
-    imageElement.src = image.medium;
-    imageElement.alt = name;
+    imageElement = getImage(image.medium, name);
     imageElement.className = "show-image";
   }
 
@@ -255,9 +270,7 @@ function createEpisodeCard({ name, season, number, url, image, summary }) {
   linkElement.target = "_blank";
 
   if (image && image.medium) {
-    const imageElement = document.createElement("img");
-    imageElement.src = image.medium;
-    imageElement.alt = name;
+    const imageElement = getImage(image.medium, name);
     linkElement.appendChild(imageElement);
   }
 
@@ -340,6 +353,7 @@ function populateEpisodeSelector(episodes) {
 
 function setup() {
   const state = {
+    showsPromise: null,
     showsList: [],
     episodesList: [],
     episodesCache: {},
@@ -347,7 +361,11 @@ function setup() {
 
   return {
     async fetchShowsFromEndPoint() {
-      state.showsList = await fetchShows();
+      if (!state.showsPromise) {
+        state.showsPromise = fetchShows();
+      }
+      const shows = await state.showsPromise;
+      state.showsList = shows;
     },
     // default setting for the page
     renderPageForShows() {
@@ -370,15 +388,15 @@ function setup() {
         if (!selectedShowId) {
           return this.renderPageForShows();
         }
-        if (state.episodesCache[selectedShowId]) {
+        if (!state.episodesCache[selectedShowId]) {
+          console.log("fetching a new show");
+          state.episodesCache[selectedShowId] =
+            fetchingEpisodes(selectedShowId);
+        } else {
           console.log("already got this");
-          state.episodesList = state.episodesCache[selectedShowId];
-          return handleShowSelector(state.episodesCache[selectedShowId]);
         }
-        const fetchedEpisodes = await fetchingEpisodes(selectedShowId);
-        state.episodesList = fetchedEpisodes;
-        state.episodesCache[selectedShowId] = fetchedEpisodes;
-        console.log("fetching a new show");
+        const episodes = await state.episodesCache[selectedShowId];
+        state.episodesList = episodes;
         handleShowSelector(state.episodesList);
       });
 
