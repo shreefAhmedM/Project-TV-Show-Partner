@@ -1,20 +1,27 @@
 // fetching functions
+function fetchShowsOnce() {
+  let showCache = null;
 
-async function fetchShows() {
-  loadingData();
-  try {
-    const response = await fetch("https://api.tvmaze.com/shows");
-    if (!response.ok)
-      throw new Error(`Failed to fetch shows: ${response.status}`);
-    const shows = await response.json();
-    const sortedShows = shows.sort((a, b) =>
-      a.name.toLowerCase().localeCompare(b.name.toLowerCase())
-    );
-    return sortedShows;
-  } catch (error) {
-    showError(error.message);
-    throw new Error(`Response status: ${error.message}`);
-  }
+  return async function fetchShows() {
+    if (showCache) {
+      return showCache;
+    }
+    try {
+      loadingData();
+      const response = await fetch("https://api.tvmaze.com/shows");
+      if (!response.ok)
+        throw new Error(`Failed to fetch shows: ${response.status}`);
+      const shows = await response.json();
+      const sortedShows = shows.sort((a, b) =>
+        a.name.toLowerCase().localeCompare(b.name.toLowerCase())
+      );
+      showCache = sortedShows;
+      return sortedShows;
+    } catch (error) {
+      showError(error.message);
+      throw new Error(`Response status: ${error.message}`);
+    }
+  };
 }
 
 async function fetchingEpisodes(selectedShowId) {
@@ -353,7 +360,6 @@ function populateEpisodeSelector(episodes) {
 
 function setup() {
   const state = {
-    showsPromise: null,
     showsList: [],
     episodesList: [],
     episodesCache: {},
@@ -361,10 +367,8 @@ function setup() {
 
   return {
     async fetchShowsFromEndPoint() {
-      if (!state.showsPromise) {
-        state.showsPromise = fetchShows();
-      }
-      const shows = await state.showsPromise;
+      const fetchShows = fetchShowsOnce();
+      const shows = await fetchShows();
       state.showsList = shows;
     },
     // default setting for the page
