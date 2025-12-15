@@ -191,22 +191,6 @@ function resetSearchTerm() {
   document.getElementById("show-filter").value = "";
 }
 
-function imageMemory() {
-  const imageCache = {};
-
-  return function getImage(url, alt) {
-    if (!imageCache[url]) {
-      const img = new Image();
-      img.src = url;
-      img.alt = alt;
-      imageCache[url] = img;
-    }
-    return imageCache[url];
-  };
-}
-
-const getImage = imageMemory();
-
 // create cards (shows, episodes)
 
 function createShowCard({
@@ -226,9 +210,10 @@ function createShowCard({
   nameElement.className = "show-name";
   nameElement.textContent = name;
 
-  let imageElement;
+  const imageElement = document.createElement("img");
   if (image && image.medium) {
-    imageElement = getImage(image.medium, name);
+    imageElement.src = image.medium;
+    imageElement.alt = name;
     imageElement.className = "show-image";
   }
 
@@ -287,7 +272,9 @@ function createEpisodeCard({ name, season, number, url, image, summary }) {
   linkElement.target = "_blank";
 
   if (image && image.medium) {
-    const imageElement = getImage(image.medium, name);
+    const imageElement = document.createElement("img");
+    imageElement.src = image.medium;
+    imageElement.alt = name;
     linkElement.appendChild(imageElement);
   }
 
