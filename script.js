@@ -24,22 +24,32 @@ function fetchShowsOnce() {
   };
 }
 
-async function fetchingEpisodes(selectedShowId) {
-  loadingData();
-  try {
-    const response = await fetch(
-      `https://api.tvmaze.com/shows/${selectedShowId}/episodes`
-    );
+function episodesFetcher() {
+  let episodesCache = {};
 
-    if (!response.ok)
-      throw new Error(`Failed to fetch episodes: ${response.status}`);
+  return async function fetchingEpisodes(selectedShowId) {
+    if (episodesCache[selectedShowId]) {
+      return episodesCache[selectedShowId];
+    }
+    try {
+      loadingData();
+      const response = await fetch(
+        `https://api.tvmaze.com/shows/${selectedShowId}/episodes`
+      );
 
-    const episodes = await response.json();
-    return episodes;
-  } catch (error) {
-    showError(error.message);
-    throw new Error(`Response status: ${error.message}`);
-  }
+      if (!response.ok)
+        throw new Error(`Failed to fetch episodes: ${response.status}`);
+
+      const episodes = await response.json();
+
+      episodesCache[selectedShowId] = episodes;
+
+      return episodes;
+    } catch (error) {
+      showError(error.message);
+      throw new Error(`Response status: ${error.message}`);
+    }
+  };
 }
 
 // make page functions
@@ -362,12 +372,10 @@ function setup() {
   const state = {
     showsList: [],
     episodesList: [],
-    episodesCache: {},
   };
 
   return {
     async fetchShowsFromEndPoint() {
-      const fetchShows = fetchShowsOnce();
       const shows = await fetchShows();
       state.showsList = shows;
     },
@@ -392,14 +400,7 @@ function setup() {
         if (!selectedShowId) {
           return this.renderPageForShows();
         }
-        if (!state.episodesCache[selectedShowId]) {
-          console.log("fetching a new show");
-          state.episodesCache[selectedShowId] =
-            fetchingEpisodes(selectedShowId);
-        } else {
-          console.log("already got this");
-        }
-        const episodes = await state.episodesCache[selectedShowId];
+        const episodes = await fetchEpisodes(selectedShowId);
         state.episodesList = episodes;
         handleShowSelector(state.episodesList);
       });
@@ -426,6 +427,9 @@ function setup() {
     },
   };
 }
+
+const fetchShows = fetchShowsOnce();
+const fetchEpisodes = episodesFetcher();
 
 const tvShow = setup();
 
