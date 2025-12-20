@@ -1,5 +1,5 @@
 body {
-  background-color: #f6f6f6;
+  background-color: #ffffff;
   margin-left: 22rem;
   margin-right: 27rem;
 }
@@ -9,7 +9,6 @@ header {
   justify-content: flex-start;
   align-items: center;
   margin: 20px 0;
-  gap: 20px;
 }
 #search-term-input {
   border: none;
