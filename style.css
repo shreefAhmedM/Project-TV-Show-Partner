@@ -2,34 +2,25 @@ body {
   background-color: #f6f6f6;
   margin-left: 22rem;
   margin-right: 27rem;
+  font-family: Arial, sans-serif;
 }
+
 header {
-  width: 100%;
   display: flex;
-  justify-content: flex-start;
   align-items: center;
+  gap: 15px;
   margin: 20px 0;
 }
-#search-term-input {
-  border: none;
-  padding: 3px 8px;
-  width: 200px;
+
+select,
+input {
+  padding: 5px 8px;
   font-size: 1rem;
-  font-weight: bold;
-  outline: none;
-  background-color: rgb(255, 255, 255);
-}
-#episode-search {
-  margin-left: 20px;
-  margin-right: 20px;
 }
 
 #numbers-of-episodes {
-  box-shadow: 1px 1px 1px 2px rgba(0, 0, 0, 0.1);
-  color: black;
-  margin-left: 8px;
-  padding: 2px 10px;
-  border: none;
+  padding: 4px 10px;
+  box-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 #root {
@@ -37,8 +28,15 @@ header {
   grid-template-columns: repeat(3, 1fr);
   gap: 20px;
 }
+
 .episode-card {
-  box-shadow: 1px 1px 1px 2px rgba(0, 0, 0, 0.1);
-  text-align: center;
+  background: white;
   padding: 10px;
+  text-align: center;
+  box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+}
+
+.episode-card img {
+  width: 100%;
+  height: auto;
 }

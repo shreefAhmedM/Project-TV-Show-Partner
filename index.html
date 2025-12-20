@@ -3,26 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>TV Show Project | TzeMingHo (TzeMingHo)</title>
-    <link href="style.css" rel="stylesheet" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <title>TV Show Project</title>
+    <link rel="stylesheet" href="style.css" />
   </head>
   <body>
     <header>
-      <div id="season-filter">
-        <select name="season-selector" id="season-selector"></select>
+      <div id="episode-filter">
+        <select id="episode-selector">
+          <option value="">Jump to episode</option>
+        </select>
       </div>
-
       <div id="episode-search">
         <input type="text" id="search-term-input" placeholder="Search term" />
       </div>
-      <label for="numbers-of-episodes">Episodes: </label>
-      <div id="numbers-of-episodes" name="numbers-of-episodes"></div>
+
+      <label>Episodes:</label>
+      <div id="numbers-of-episodes"></div>
     </header>
 
     <div id="root"></div>
 
-    <!-- Script to load your custom JavaScript functionality -->
     <script src="script.js" defer></script>
   </body>
 </html>
