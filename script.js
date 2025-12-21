@@ -1,9 +1,11 @@
+// GLOBAL STATE
 var allEpisodesList = [];
 var currentSearchTerm = "";
 var allShows = [];
-var episodesCache = {};
-var initialShowId = 82;
+var episodesCache = {}; // { showId: episodes[] }
+var initialShowId = 82; // example: Breaking Bad uses /shows/82/episodes[web:2][web:7]
 
+// ENTRY POINT
 async function setup() {
   await loadShows();
   await loadEpisodesForShow(initialShowId);
@@ -25,6 +27,7 @@ async function setup() {
     .addEventListener("change", handleShowSelector);
 }
 
+// LOAD ALL SHOWS ONCE AND POPULATE DROPDOWN
 async function loadShows() {
   const response = await fetch("https://api.tvmaze.com/shows");
   if (!response.ok) {
@@ -32,6 +35,7 @@ async function loadShows() {
   }
   allShows = await response.json();
 
+  // sort alphabetically, case‑insensitive
   allShows.sort((a, b) =>
     a.name.toLowerCase().localeCompare(b.name.toLowerCase())
   );
@@ -46,9 +50,11 @@ async function loadShows() {
     selector.appendChild(option);
   });
 
+  // select initial show
   selector.value = String(initialShowId);
 }
 
+// LOAD EPISODES FOR A SHOW, USING CACHE TO AVOID DUPLICATE FETCHES
 async function loadEpisodesForShow(showId) {
   if (episodesCache[showId]) {
     allEpisodesList = episodesCache[showId];
@@ -67,6 +73,7 @@ async function loadEpisodesForShow(showId) {
   allEpisodesList = episodes;
 }
 
+// SEARCH HANDLER
 function handleSearchTermInput(e) {
   currentSearchTerm = e.target.value.trim().toLowerCase();
   document.getElementById("episode-selector").selectedIndex = 0;
@@ -76,6 +83,7 @@ function handleSearchTermInput(e) {
   makePageForEpisodes(filtered);
 }
 
+// EPISODE SELECTOR HANDLER
 function handleEpisodeSelector(e) {
   const episodeId = Number(e.target.value);
   if (!episodeId) {
@@ -89,10 +97,12 @@ function handleEpisodeSelector(e) {
   updateMatchCount(found ? 1 : 0, allEpisodesList.length);
 }
 
+// SHOW SELECTOR HANDLER
 async function handleShowSelector(e) {
   const showId = Number(e.target.value);
   if (!showId) return;
 
+  // reset search and episode selector
   currentSearchTerm = "";
   document.getElementById("search-term-input").value = "";
   document.getElementById("episode-selector").selectedIndex = 0;
@@ -104,6 +114,7 @@ async function handleShowSelector(e) {
   makePageForEpisodes(allEpisodesList);
 }
 
+// FILTERING
 function filterEpisodes(list, term) {
   if (!term) return list;
   return list.filter(
@@ -113,6 +124,7 @@ function filterEpisodes(list, term) {
   );
 }
 
+// POPULATE EPISODE SELECT
 function populateEpisodeSelector(episodes) {
   const selector = document.getElementById("episode-selector");
   selector.innerHTML = `<option value="">Jump to episode</option>`;
@@ -127,15 +139,17 @@ function populateEpisodeSelector(episodes) {
   });
 }
 
+// UTILS
 function pad(number) {
   return String(number).padStart(2, "0");
 }
 
 function updateMatchCount(filtered, total) {
   document.getElementById("numbers-of-episodes").textContent =
-    `${filtered.length}/${total.length}`;
+    `${filtered}/${total}`;
 }
 
+// RENDERING
 function createEpisodeCard({ name, season, number, url, image, summary }) {
   const card = document.createElement("div");
   card.className = "episode-card";

@@ -17,45 +17,15 @@
         <select name="season-selector" id="episode-selector"></select>
       </div>
 
-      <div id="episode-controls">
-        <nav id="nav-bar">
-          <ul>
-            <li id="nav-home">Home</li>
-            <li id="nav-show-name">Show name</li>
-          </ul>
-        </nav>
-        <div id="season-filter">
-          <label id="season-label" for="season-selector">Seasons:</label>
-          <select name="season-selector" id="season-selector"></select>
-        </div>
-
-        <div id="episode-filter">
-          <label id="episode-label" for="episode-selector">Episodes:</label>
-          <select name="episode-selector" id="episode-selector"></select>
-        </div>
-
-        <div id="episode-search">
-          <input
-            type="text"
-            id="search-term-input"
-            placeholder="Search episode by text"
-            aria-label="Input for search term in episode"
-          />
-        </div>
-
-        <div id="episode-match">
-          <label for="numbers-of-episodes">Episodes match:</label>
-          <div id="numbers-of-episodes" name="numbers-of-episodes"></div>
-        </div>
+      <div id="episode-search">
+        <input type="text" id="search-term-input" placeholder="Search term" />
       </div>
 
       <label for="numbers-of-episodes">Episodes: </label>
       <div id="numbers-of-episodes" name="numbers-of-episodes"></div>
     </header>
 
-    <main id="root"></main>
-
-    <footer>Data provided by TV maze</footer>
+    <div id="root"></div>
 
     <script src="script.js" defer></script>
   </body>
