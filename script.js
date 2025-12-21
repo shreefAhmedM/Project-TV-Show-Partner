@@ -133,7 +133,7 @@ function pad(number) {
 
 function updateMatchCount(filtered, total) {
   document.getElementById("numbers-of-episodes").textContent =
-    `${filtered}/${total}`;
+    `${filtered.length}/${total.length}`;
 }
 
 function createEpisodeCard({ name, season, number, url, image, summary }) {
